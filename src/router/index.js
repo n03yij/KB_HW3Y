@@ -7,49 +7,49 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/HomeView.vue'), // 가계부 메인
+      component: () => import('@/views/HomeView.vue'), // 가계부 메인
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/LoginView.vue'),
+      component: () => import('@/views/LoginView.vue'),
     },
     {
       path: '/register',
-      component: () => import('../views/RegisterView.vue'),
+      component: () => import('@/views/RegisterView.vue'),
       children: [
         { path: '', name: 'register', redirect: '/register/agreement' },
         {
           path: 'agreement',
           name: 'registerAgreement',
-          component: () => import('../components/Register/RegisterAgreement.vue'),
+          component: () => import('@/components/Register/RegisterAgreement.vue'),
         },
         {
           path: 'account',
           name: 'registerAccount',
-          component: () => import('../components/Register/RegisterAccount.vue'),
+          component: () => import('@/components/Register/RegisterAccount.vue'),
         },
       ],
     },
     {
       path: '/transactions', // 이미지 기획서대로 s 추가
       name: 'summary',
-      component: () => import('../views/SummaryView.vue'), // 요약 리스트
+      component: () => import('@/views/SummaryView.vue'), // 요약 리스트
     },
     {
-      path: '/transactions/new', // 앞에 / 추가 및 s 추가
+      path: '/challenge',
       name: 'challenge',
-      component: () => import('../views/ChallengeView.vue'), // 내역 입력(챌린지)
+      component: () => import('@/views/ChallengeView.vue'),
     },
     {
       path: '/transactions/:id',
       name: 'transaction-detail',
-      component: () => import('../views/TransactionDetailView.vue'),
+      component: () => import('@/views/TransactionDetailView.vue'),
     },
     {
       path: '/settings',
       name: 'profile',
-      component: () => import('../views/ProfileView.vue'), // 프로필/설정
+      component: () => import('@/views/ProfileView.vue'), // 프로필/설정
     },
   ],
 })

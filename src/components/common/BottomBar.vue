@@ -27,7 +27,7 @@
     </router-link>
 
     <!-- 챌린지 (Challenge) -->
-    <router-link to="/transactions/new" class="flex flex-col items-center gap-1 group">
+    <router-link to="/challenge" class="flex flex-col items-center gap-1 group">
       <img
         :src="challengeIcon"
         alt="챌린지"
