@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@theme {
+  /* ── KB Main Colors ── */
+  --color-kb-yellow: #FFBC00;       /* KB Yellow Positive */
+  --color-kb-yellow-light: #FFCC00; /* KB Yellow Negative */
+  --color-kb-gray: #60584C;         /* KB Gray */
+
+  /* ── KB Sub Colors ── */
+  --color-kb-dark-gray: #545045;    /* KB Dark Gray */
+}
