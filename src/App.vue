@@ -1,10 +1,5 @@
-<script setup>
-import { ref } from 'vue'
-import TermsView from './views/TermsView.vue'
-</script>
+<script setup></script>
 
 <template>
-  <TermsView />
+  <RouterView />
 </template>
-
-<style lang="scss" scoped></style>

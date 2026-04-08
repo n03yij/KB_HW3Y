@@ -9,7 +9,7 @@ export const useUserStore = defineStore('user', () => {
   const totalSteps = ref(3)
 
   // ────────────────────────────────────────────
-  // 약관 목록
+  // 약관 목록 (1단계)
   // ────────────────────────────────────────────
   const terms = ref([
     { id: 1, label: '[필수] 이용약관 동의', required: true, checked: false },
@@ -19,16 +19,28 @@ export const useUserStore = defineStore('user', () => {
   ])
 
   // ────────────────────────────────────────────
+  // 계정 정보 유효성 (2단계) - TermsAccount에서 동기화
+  // ────────────────────────────────────────────
+  const isAccountStepValid = ref(false)
+
+  // ────────────────────────────────────────────
   // 계산된 상태
   // ────────────────────────────────────────────
 
   // 전체 동의 여부
   const allChecked = computed(() => terms.value.every((t) => t.checked))
 
-  // 필수 약관 전체 동의 여부 (다음 버튼 활성화 조건)
+  // 필수 약관 전체 동의 여부
   const requiredAllChecked = computed(() =>
     terms.value.filter((t) => t.required).every((t) => t.checked),
   )
+
+  // 현재 단계의 다음 버튼 활성화 여부
+  const isCurrentStepValid = computed(() => {
+    if (currentStep.value === 1) return requiredAllChecked.value
+    if (currentStep.value === 2) return isAccountStepValid.value
+    return true
+  })
 
   // ────────────────────────────────────────────
   // 액션
@@ -60,15 +72,22 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  // 계정 정보 유효성 동기화 (TermsAccount에서 호출)
+  function setAccountStepValid(val) {
+    isAccountStepValid.value = val
+  }
+
   return {
     currentStep,
     totalSteps,
     terms,
     allChecked,
     requiredAllChecked,
+    isCurrentStepValid,
     toggleAll,
     toggleTerm,
     nextStep,
     prevStep,
+    setAccountStepValid,
   }
 })

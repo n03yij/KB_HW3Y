@@ -1,17 +1,38 @@
 <script setup>
-import TermsCheckBox from '../components/Terms/TermsCheckBox.vue'
-import TermsButton from '../components/Terms/TermsButton.vue'
+import RegisterButton from '../components/Register/RegisterButton.vue'
 import { useUserStore } from '../stores/user'
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
+const router = useRouter()
+
+// 단계별 라우트 매핑
+const stepRoutes = ['/register/agreement', '/register/account']
+
+// 뒤로가기: 이전 단계 라우트로 이동 또는 히스토리 백
+function handlePrev() {
+  if (userStore.currentStep > 1) {
+    userStore.prevStep()
+    router.push(stepRoutes[userStore.currentStep - 1])
+  } else {
+    router.back()
+  }
+}
+
+// 다음: 다음 단계 라우트로 이동
+function handleNext() {
+  if (userStore.currentStep < userStore.totalSteps) {
+    userStore.nextStep()
+    router.push(stepRoutes[userStore.currentStep - 1])
+  }
+}
 </script>
 
 <template>
   <div class="min-h-dvh bg-stone-50 flex flex-col px-5 pt-6 pb-8">
-
     <!-- 뒤로 버튼 -->
     <button
-      @click="userStore.prevStep"
+      @click="handlePrev"
       class="flex items-center gap-1 text-sm text-kb-gray hover:text-kb-dark-gray transition-colors duration-200 w-fit"
     >
       <span class="text-base leading-none">&lt;</span>
@@ -33,23 +54,18 @@ const userStore = useUserStore()
       </span>
     </div>
 
-    <!-- 타이틀 영역 -->
-    <h1 class="text-2xl font-bold text-kb-dark-gray mt-6 leading-snug">약관에 동의해주세요</h1>
-    <p class="text-sm text-kb-gray mt-1">서비스 이용을 위해 약관 동의가 필요합니다</p>
-
-    <!-- 약관 체크박스 -->
-    <div class="mt-6 flex-1">
-      <TermsCheckBox />
+    <!-- 각 단계별 콘텐츠 영역 -->
+    <div class="mt-6 flex-1 flex flex-col">
+      <RouterView />
     </div>
 
-    <!-- 다음 버튼 (필수 약관 전체 동의 시 활성화) -->
-    <TermsButton
+    <!-- 다음 버튼 -->
+    <RegisterButton
       class="mt-8"
       label="다음"
-      :disabled="!userStore.requiredAllChecked"
-      @click="userStore.nextStep"
+      :disabled="!userStore.isCurrentStepValid"
+      @click="handleNext"
     />
-
   </div>
 </template>
 
