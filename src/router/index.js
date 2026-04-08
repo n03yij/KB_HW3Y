@@ -47,7 +47,7 @@ const router = createRouter({
       component: () => import('@/views/TransactionDetailView.vue'),
     },
     {
-      path: '/settings',
+      path: '/profile',
       name: 'profile',
       component: () => import('@/views/ProfileView.vue'), // 프로필/설정
     },
