@@ -3,7 +3,7 @@
     class="absolute bottom-0 left-0 w-full h-[80px] bg-white border-t border-gray-100 flex items-center justify-around px-2 pb-5 z-10"
   >
     <!-- 가계부 (Home) -->
-    <router-link to="/" class="flex flex-col items-center gap-1 group">
+    <router-link to="/home" class="flex flex-col items-center gap-1 group">
       <img
         :src="budgetIcon"
         alt="가계부"
