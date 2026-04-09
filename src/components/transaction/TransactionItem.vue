@@ -8,7 +8,7 @@ import homeIcon from '@/assets/home.svg'
 import shoppingBagIcon from '@/assets/shoppingBag.svg'
 import trophyIcon from '@/assets/trophy.svg'
 import workIcon from '@/assets/suitcase.svg'
-import mealIcon from '@/assets/calendar_meal_24dp_60584C_FILL0_wght400_GRAD0_opsz24.svg'
+import mealIcon from '@/assets/calendar_meal.svg'
 
 const router = useRouter()
 
