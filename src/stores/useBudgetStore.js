@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import { DEFAULT_USER_ID } from '../api/axios'
+import { useAuthStore } from './user'
 import {
   createTransaction,
   deleteTransaction,
@@ -45,7 +45,10 @@ const normalizeUpdatePayload = (payload) => {
 }
 
 export const useBudgetStore = defineStore('budget', () => {
-  const userId = ref(DEFAULT_USER_ID)
+  const authStore = useAuthStore()
+
+  // 로그인된 유저의 ID를 항상 참조 (하드코딩 제거)
+  const userId = computed(() => authStore.currentUser?.id)
   const currentMonth = ref(dayjs().format('YYYY-MM'))
   const selectedFilter = ref(ALL_FILTER)
   const transactions = ref([])
@@ -217,10 +220,6 @@ export const useBudgetStore = defineStore('budget', () => {
     selectedFilter.value = filter
   }
 
-  const setUserId = (nextUserId) => {
-    userId.value = nextUserId
-  }
-
   return {
     addTransaction,
     categorySummary,
@@ -238,7 +237,6 @@ export const useBudgetStore = defineStore('budget', () => {
     selectedFilter,
     setCurrentMonth,
     setSelectedFilter,
-    setUserId,
     transactions,
     userId,
   }

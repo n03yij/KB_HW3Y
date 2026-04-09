@@ -1,11 +1,11 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '../stores/user'
+import { useAuthStore } from '../stores/user'
 import RegisterButton from '../components/Register/RegisterButton.vue'
 
 const router = useRouter()
-const userStore = useUserStore()
+const authStore = useAuthStore()
 
 // 입력값
 const email = ref('')
@@ -15,21 +15,16 @@ const showPassword = ref(false)
 // 에러 메시지
 const errorMessage = ref('')
 
-// 로그인 버튼 활성화 여부
-const isFormValid = ref(false)
-
-// 입력 변경 시 유효성 체크 및 에러 초기화
-function handleInput() {
-  errorMessage.value = ''
-  isFormValid.value = email.value !== '' && password.value !== ''
-}
+// 이메일과 비밀번호가 모두 입력되어야 버튼 활성화
+const isFormValid = computed(() => email.value !== '' && password.value !== '')
 
 // 로그인 처리
 async function handleLogin() {
   if (!isFormValid.value) return
+  errorMessage.value = ''
 
   try {
-    await userStore.login(email.value, password.value)
+    await authStore.login(email.value, password.value)
     router.push({ name: 'home' })
   } catch (error) {
     errorMessage.value = error.message
@@ -61,7 +56,7 @@ function goToRegister() {
           v-model="email"
           type="email"
           placeholder="example@email.com"
-          @input="handleInput"
+          @input="errorMessage = ''"
           class="w-full px-4 py-3.5 rounded-2xl border border-zinc-200 bg-white text-sm text-kb-dark-gray placeholder:text-zinc-300 outline-none focus:border-kb-yellow transition-colors duration-200"
         />
       </div>
@@ -74,7 +69,7 @@ function goToRegister() {
             v-model="password"
             :type="showPassword ? 'text' : 'password'"
             placeholder="비밀번호를 입력해주세요"
-            @input="handleInput"
+            @input="errorMessage = ''"
             class="w-full px-4 py-3.5 pr-16 rounded-2xl border border-zinc-200 bg-white text-sm text-kb-dark-gray placeholder:text-zinc-300 outline-none focus:border-kb-yellow transition-colors duration-200"
           />
           <button
@@ -109,12 +104,7 @@ function goToRegister() {
         type="button"
         @click="goToRegister"
         class="text-sm font-semibold text-kb-yellow underline underline-offset-2"
-      >
-        회원가입
-      </button>
+      >회원가입</button>
     </div>
-
   </div>
 </template>
-
-<style lang="scss" scoped></style>

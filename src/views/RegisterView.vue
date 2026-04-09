@@ -1,23 +1,23 @@
 <script setup>
 import { computed } from 'vue'
 import RegisterButton from '../components/Register/RegisterButton.vue'
-import { useUserStore } from '../stores/user'
+import { useRegisterStore } from '../stores/useRegisterStore'
 import { useRouter } from 'vue-router'
 
-const userStore = useUserStore()
+const registerStore = useRegisterStore()
 const router = useRouter()
 
 // 단계별 라우트 매핑 (1단계: agreement, 2단계: account, 3단계: profile)
 const stepRoutes = ['/register/agreement', '/register/account', '/register/profile']
 
 // 현재 단계가 마지막 단계인지 여부 (버튼 레이블 전환용)
-const isLastStep = computed(() => userStore.currentStep === userStore.totalSteps)
+const isLastStep = computed(() => registerStore.currentStep === registerStore.totalSteps)
 
 // 뒤로가기: 이전 단계 라우트로 이동 또는 히스토리 백
 function handlePrev() {
-  if (userStore.currentStep > 1) {
-    userStore.prevStep()
-    router.push(stepRoutes[userStore.currentStep - 1])
+  if (registerStore.currentStep > 1) {
+    registerStore.prevStep()
+    router.push(stepRoutes[registerStore.currentStep - 1])
   } else {
     router.back()
   }
@@ -28,10 +28,10 @@ async function handleNext() {
   // 마지막 단계(3단계)일 때: 회원가입 API 호출
   if (isLastStep.value) {
     try {
-      await userStore.register()
+      await registerStore.register()
       // 네비게이션 완료 후 상태 초기화 (순서 중요: push 먼저 await)
       await router.push({ name: 'login' })
-      userStore.resetRegister()
+      registerStore.resetRegister()
     } catch (error) {
       console.error('회원가입 실패:', error)
       alert('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.')
@@ -40,9 +40,9 @@ async function handleNext() {
   }
 
   // 중간 단계일 때: 다음 단계로 이동
-  if (userStore.currentStep < userStore.totalSteps) {
-    userStore.nextStep()
-    router.push(stepRoutes[userStore.currentStep - 1])
+  if (registerStore.currentStep < registerStore.totalSteps) {
+    registerStore.nextStep()
+    router.push(stepRoutes[registerStore.currentStep - 1])
   }
 }
 </script>
@@ -62,15 +62,15 @@ async function handleNext() {
     <!-- 진행 단계 표시 -->
     <div class="flex items-center gap-2 mt-5">
       <div
-        v-for="step in userStore.totalSteps"
+        v-for="step in registerStore.totalSteps"
         :key="step"
         :class="[
           'h-2 rounded-full transition-all duration-300',
-          step === userStore.currentStep ? 'w-7 bg-kb-yellow' : 'w-2 bg-zinc-300',
+          step === registerStore.currentStep ? 'w-7 bg-kb-yellow' : 'w-2 bg-zinc-300',
         ]"
       />
       <span class="text-xs text-kb-gray ml-1">
-        {{ userStore.currentStep }} / {{ userStore.totalSteps }}단계
+        {{ registerStore.currentStep }} / {{ registerStore.totalSteps }}단계
       </span>
     </div>
 
@@ -83,7 +83,7 @@ async function handleNext() {
     <RegisterButton
       class="bottom-0"
       :label="isLastStep ? '가입 완료' : '다음'"
-      :disabled="!userStore.isCurrentStepValid"
+      :disabled="!registerStore.isCurrentStepValid"
       @click="handleNext"
     />
   </div>

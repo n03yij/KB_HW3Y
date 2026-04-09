@@ -11,30 +11,17 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import '@/assets/main.css'
 import NavBar from '@/components/common/NavBar.vue'
 import BottomBar from '@/components/common/BottomBar.vue'
-
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
-// 1. 레이아웃을 숨길 경로/이름 정의
-const isHideLayout = computed(() => {
-  const hidePaths = ['/', '/login', '/register']
-  const hideNames = ['splash', 'login', 'register', 'registerAgreement', 'registerAccount']
-
-  return hideNames.includes(route.name) || hidePaths.includes(route.path)
-})
-
-// 2. 상단 네비바 표시 여부
-const showNav = computed(() => !isHideLayout.value)
-
-// 3. 하단바 표시 여부 (두 조건을 하나로 합침)
-const showBottomBar = computed(() => {
-  // 레이아웃 숨김 대상이 아니고 && /register로 시작하는 경로가 아닐 때만 true
-  return !isHideLayout.value && !route.path.startsWith('/register')
-})
+// 인증이 필요한 페이지(홈, 요약, 챌린지, 프로필)에서만 NavBar / BottomBar 표시
+const showNav = computed(() => !!route.meta.requiresAuth)
+const showBottomBar = computed(() => !!route.meta.requiresAuth)
 </script>

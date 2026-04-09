@@ -1,7 +1,7 @@
-import apiClient, { DEFAULT_USER_ID } from './axios'
+import apiClient from './axios'
 
 // 거래내역 조회
-export const getTransactions = async ({ userId = DEFAULT_USER_ID, month } = {}) => {
+export const getTransactions = async ({ userId, month } = {}) => {
   const params = { userId }
   // json-server v1 beta uses field operators like date:startsWith=2026-04
   if (month) params['date:startsWith'] = month // ex) '2026-04'
@@ -13,7 +13,7 @@ export const getTransactions = async ({ userId = DEFAULT_USER_ID, month } = {}) 
 export const createTransaction = async (payload) => {
   const timestamp = new Date().toISOString()
   const requestBody = {
-    userId: payload.userId ?? DEFAULT_USER_ID,
+    userId: payload.userId,
     type: payload.type,
     category: payload.category,
     amount: Number(payload.amount),

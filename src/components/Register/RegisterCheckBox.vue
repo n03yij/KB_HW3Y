@@ -1,7 +1,7 @@
 <script setup>
-import { useUserStore } from '../../stores/user'
+import { useRegisterStore } from '../../stores/useRegisterStore'
 
-const userStore = useUserStore()
+const registerStore = useRegisterStore()
 </script>
 
 <template>
@@ -9,10 +9,10 @@ const userStore = useUserStore()
 
     <!-- 전체 동의하기 -->
     <button
-      @click="userStore.toggleAll"
+      @click="registerStore.toggleAll"
       :class="[
         'flex items-center gap-3 w-full px-4 py-4 rounded-2xl border transition-colors duration-200',
-        userStore.allChecked
+        registerStore.allChecked
           ? 'bg-amber-50 border-kb-yellow'
           : 'bg-white border-zinc-200',
       ]"
@@ -21,11 +21,11 @@ const userStore = useUserStore()
       <span
         :class="[
           'flex items-center justify-center w-6 h-6 rounded-full flex-shrink-0',
-          userStore.allChecked ? 'bg-kb-yellow' : 'border-2 border-zinc-300',
+          registerStore.allChecked ? 'bg-kb-yellow' : 'border-2 border-zinc-300',
         ]"
       >
         <svg
-          v-if="userStore.allChecked"
+          v-if="registerStore.allChecked"
           class="w-3.5 h-3.5 text-white"
           fill="none"
           stroke="currentColor"
@@ -40,9 +40,9 @@ const userStore = useUserStore()
 
     <!-- 개별 약관 항목 -->
     <button
-      v-for="term in userStore.terms"
+      v-for="term in registerStore.terms"
       :key="term.id"
-      @click="userStore.toggleTerm(term.id)"
+      @click="registerStore.toggleTerm(term.id)"
       class="flex items-center gap-3 w-full px-4 py-4 bg-white rounded-2xl border border-zinc-200 transition-colors duration-200"
     >
       <!-- 체크 아이콘 -->

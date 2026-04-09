@@ -1,15 +1,9 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { useUserStore } from '../../stores/user'
+import { ref, computed } from 'vue'
+import { useRegisterStore } from '../../stores/useRegisterStore'
 import ramuFace from '../../assets/ramu_face.png'
 
-const userStore = useUserStore()
-
-// 닉네임
-const nickname = ref('')
-
-// 월 목표 예산
-const monthlyBudget = ref('')
+const registerStore = useRegisterStore()
 
 // 프로필 이미지 미리보기 (기본: 라무 캐릭터)
 const profileImagePreview = ref(ramuFace)
@@ -17,13 +11,14 @@ const profileImagePreview = ref(ramuFace)
 // 파일 입력 요소 참조
 const fileInputRef = ref(null)
 
-// 닉네임 유효성: 2~8자, 한글/영문/숫자만 허용 (특수문자 불가)
-const isNicknameValid = computed(() =>
-  /^[가-힣a-zA-Z0-9]{2,8}$/.test(nickname.value),
-)
-
-// 폼 전체 유효성 (닉네임만 필수, 예산은 선택)
-const isFormValid = computed(() => isNicknameValid.value)
+// 월 목표 예산: 입력값(문자열)을 숫자로 파싱해서 스토어에 저장하는 computed
+const monthlyBudget = computed({
+  get: () => registerStore.registerForm.monthlyBudget ?? '',
+  set: (val) => {
+    const parsed = parseInt(val, 10)
+    registerStore.registerForm.monthlyBudget = isNaN(parsed) ? null : parsed
+  },
+})
 
 // 사진 변경 버튼 클릭 시 파일 입력 트리거
 function handleImageClick() {
@@ -38,26 +33,10 @@ function handleFileChange(event) {
   const reader = new FileReader()
   reader.onload = (e) => {
     profileImagePreview.value = e.target.result
-    userStore.setProfileImage(e.target.result)
+    registerStore.registerForm.profileImage = e.target.result
   }
   reader.readAsDataURL(file)
 }
-
-// 닉네임 변경 시 스토어에 동기화
-watch(nickname, (val) => {
-  userStore.setNickname(val)
-})
-
-// 예산 변경 시 숫자로 파싱 후 스토어에 동기화
-watch(monthlyBudget, (val) => {
-  const parsed = parseInt(val, 10)
-  userStore.setMonthlyBudget(isNaN(parsed) ? null : parsed)
-})
-
-// 유효성 변경 시 스토어에 동기화
-watch(isFormValid, (val) => {
-  userStore.setProfileStepValid(val)
-}, { immediate: true })
 </script>
 
 <template>
@@ -104,7 +83,7 @@ watch(isFormValid, (val) => {
         <span class="text-xs text-red-500">특수문자는 사용할 수 없습니다</span>
       </div>
       <input
-        v-model="nickname"
+        v-model="registerStore.registerForm.nickname"
         type="text"
         placeholder="2~8자 이내로 입력해주세요"
         maxlength="8"

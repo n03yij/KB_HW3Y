@@ -27,6 +27,20 @@
       "joinedAt": "2026-04-09",
       "currentChallengeId": null,
       "id": "pATImzNd7lY"
+    },
+    {
+      "email": "test",
+      "password": "qwer1234!",
+      "nickname": "test",
+      "profileImage": null,
+      "monthlyBudget": 0,
+      "level": 1,
+      "challengeCount": 0,
+      "thisMonthRank": 0,
+      "streakDays": 0,
+      "joinedAt": "2026-04-09",
+      "currentChallengeId": null,
+      "id": "WMNIxvbXK0s"
     }
   ],
   "transactions": [
@@ -221,6 +235,42 @@
       "memo": "저녁 식사",
       "createdAt": "2026-03-20T19:10:00",
       "updatedAt": "2026-03-20T19:10:00"
+    },
+    {
+      "userId": "WMNIxvbXK0s",
+      "type": "expense",
+      "category": "식비",
+      "amount": 333,
+      "date": "2026-04-09",
+      "merchant": "",
+      "memo": "",
+      "createdAt": "2026-04-09T06:02:24.149Z",
+      "updatedAt": "2026-04-09T06:02:24.149Z",
+      "id": "v2iMVnXNPfY"
+    },
+    {
+      "userId": "WMNIxvbXK0s",
+      "type": "expense",
+      "category": "식비",
+      "amount": 2222,
+      "date": "2026-04-09",
+      "merchant": "",
+      "memo": "",
+      "createdAt": "2026-04-09T06:05:47.964Z",
+      "updatedAt": "2026-04-09T06:05:47.964Z",
+      "id": "LmG-nwUUT70"
+    },
+    {
+      "userId": "WMNIxvbXK0s",
+      "type": "expense",
+      "category": "교통",
+      "amount": 22222,
+      "date": "2026-04-09",
+      "merchant": "",
+      "memo": "",
+      "createdAt": "2026-04-09T06:07:14.652Z",
+      "updatedAt": "2026-04-09T06:07:14.652Z",
+      "id": "Iikr1fd1yWc"
     }
   ],
   "challenges": [

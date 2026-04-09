@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import { useAuthStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -56,8 +56,7 @@ const router = createRouter({
       component: () => import('@/views/ChallengeView.vue'),
       meta: { requiresAuth: true },
     },
-
-{
+    {
       path: '/profile',
       name: 'profile',
       component: () => import('@/views/ProfileView.vue'),
@@ -70,15 +69,15 @@ const router = createRouter({
 // 네비게이션 가드
 // ────────────────────────────────────────────
 router.beforeEach((to) => {
-  const userStore = useUserStore()
+  const authStore = useAuthStore()
 
   // 로그인이 필요한 페이지인데 비로그인 상태 → 로그인 페이지로
-  if (to.meta.requiresAuth && !userStore.isLoggedIn) {
+  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
     return { name: 'login' }
   }
 
   // 비로그인 전용 페이지인데 로그인 상태 → 홈으로
-  if (to.meta.guest && userStore.isLoggedIn) {
+  if (to.meta.guest && authStore.isLoggedIn) {
     return { name: 'home' }
   }
 })

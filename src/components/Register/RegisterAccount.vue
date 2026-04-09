@@ -1,49 +1,19 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { useUserStore } from '../../stores/user'
+import { ref, computed } from 'vue'
+import { useRegisterStore } from '../../stores/useRegisterStore'
 
-const userStore = useUserStore()
+const registerStore = useRegisterStore()
 
-// 이메일
-const email = ref('')
-
-// 비밀번호
-const password = ref('')
+// UI 전용 상태: 비밀번호 표시/숨김 토글
 const showPassword = ref(false)
-
-// 비밀번호 확인
-const passwordConfirm = ref('')
 const showPasswordConfirm = ref(false)
 
-// 비밀번호 유효성: 8자 이상, 영문+숫자+특수문자 조합
+// 비밀번호 유효성 (안내 문구 표시용)
 const isPasswordValid = computed(() =>
-  /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/.test(password.value),
+  /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/.test(
+    registerStore.registerForm.password,
+  ),
 )
-
-// 비밀번호 일치 여부
-const isPasswordMatch = computed(
-  () => password.value !== '' && password.value === passwordConfirm.value,
-)
-
-// 폼 전체 유효성 (스토어에 반영)
-const isFormValid = computed(
-  () => email.value !== '' && isPasswordValid.value && isPasswordMatch.value,
-)
-
-// 이메일 변경 시 스토어에 저장 (3단계로 넘어가도 유지)
-watch(email, (val) => {
-  userStore.setRegisterEmail(val)
-})
-
-// 비밀번호 변경 시 스토어에 저장 (3단계로 넘어가도 유지)
-watch(password, (val) => {
-  userStore.setRegisterPassword(val)
-})
-
-// 유효성 변경 시 스토어에 동기화
-watch(isFormValid, (val) => {
-  userStore.setAccountStepValid(val)
-}, { immediate: true })
 </script>
 
 <template>
@@ -58,7 +28,7 @@ watch(isFormValid, (val) => {
     <div class="flex flex-col gap-1.5">
       <label class="text-sm font-medium text-kb-dark-gray">이메일</label>
       <input
-        v-model="email"
+        v-model="registerStore.registerForm.email"
         type="email"
         placeholder="example@email.com"
         class="w-full px-4 py-3.5 rounded-2xl border border-zinc-200 bg-white text-sm text-kb-dark-gray placeholder:text-zinc-300 outline-none focus:border-kb-yellow transition-colors duration-200"
@@ -70,7 +40,7 @@ watch(isFormValid, (val) => {
       <div class="flex items-center gap-2">
         <label class="text-sm font-medium text-kb-dark-gray">비밀번호</label>
         <span
-          v-if="password && !isPasswordValid"
+          v-if="registerStore.registerForm.password && !isPasswordValid"
           class="text-xs text-red-500"
         >
           8자 이상, 영문/숫자/특수문자 조합
@@ -78,7 +48,7 @@ watch(isFormValid, (val) => {
       </div>
       <div class="relative">
         <input
-          v-model="password"
+          v-model="registerStore.registerForm.password"
           :type="showPassword ? 'text' : 'password'"
           placeholder="8자 이상, 영문+숫자+특수문자"
           class="w-full px-4 py-3.5 pr-16 rounded-2xl border border-zinc-200 bg-white text-sm text-kb-dark-gray placeholder:text-zinc-300 outline-none focus:border-kb-yellow transition-colors duration-200"
@@ -98,7 +68,7 @@ watch(isFormValid, (val) => {
       <label class="text-sm font-medium text-kb-dark-gray">비밀번호 확인</label>
       <div class="relative">
         <input
-          v-model="passwordConfirm"
+          v-model="registerStore.registerForm.passwordConfirm"
           :type="showPasswordConfirm ? 'text' : 'password'"
           placeholder="비밀번호를 한 번 더 입력하세요"
           class="w-full px-4 py-3.5 pr-16 rounded-2xl border border-zinc-200 bg-white text-sm text-kb-dark-gray placeholder:text-zinc-300 outline-none focus:border-kb-yellow transition-colors duration-200"
