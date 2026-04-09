@@ -41,12 +41,7 @@ const router = createRouter({
       name: 'challenge',
       component: () => import('@/views/ChallengeView.vue'),
     },
-    {
-      path: '/transactions/:id',
-      name: 'transaction-detail',
-      component: () => import('@/views/TransactionDetailView.vue'),
-    },
-    {
+{
       path: '/profile',
       name: 'profile',
       component: () => import('@/views/ProfileView.vue'), // 프로필/설정
