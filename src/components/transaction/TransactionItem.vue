@@ -11,7 +11,6 @@ import medicalIcon from '@/assets/Medical.svg'
 import salaryIcon from '@/assets/Salary.svg'
 import shoppingBagIcon from '@/assets/shoppingBag.svg'
 import sideJobIcon from '@/assets/SideJob.svg'
-import mealIcon from '@/assets/calendar_meal.svg'
 
 const props = defineProps({
   transaction: {
@@ -32,7 +31,6 @@ const categoryMetaMap = {
   급여: { icon: salaryIcon, iconBg: 'bg-kb-icon-blue' },
   부업: { icon: sideJobIcon, iconBg: 'bg-kb-icon-green' },
   투자: { icon: investIcon, iconBg: 'bg-kb-icon-blue' },
-  생활: { icon: mealIcon, iconBg: 'bg-kb-icon-green' },
 }
 
 const categoryMeta = categoryMetaMap[props.transaction.category] ?? {

@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "email": "hong@example.com",
       "password": "kb1234!",
       "nickname": "홍길동",
@@ -17,7 +17,7 @@
   ],
   "transactions": [
     {
-      "id": 1,
+      "id": "1",
       "userId": 1,
       "type": "income",
       "category": "부업",
@@ -29,7 +29,7 @@
       "updatedAt": "2026-04-28T09:00:00"
     },
     {
-      "id": 2,
+      "id": "2",
       "userId": 1,
       "type": "expense",
       "category": "식비",
@@ -41,7 +41,7 @@
       "updatedAt": "2026-04-26T12:30:00"
     },
     {
-      "id": 3,
+      "id": "3",
       "userId": 1,
       "type": "income",
       "category": "급여",
@@ -53,10 +53,10 @@
       "updatedAt": "2026-04-01T09:00:00"
     },
     {
-      "id": 4,
+      "id": "4",
       "userId": 1,
       "type": "expense",
-      "category": "생활",
+      "category": "기타",
       "amount": 45500,
       "date": "2026-04-02",
       "merchant": "마트",
@@ -65,7 +65,7 @@
       "updatedAt": "2026-04-02T19:20:00"
     },
     {
-      "id": 5,
+      "id": "5",
       "userId": 1,
       "type": "expense",
       "category": "교통",
@@ -77,7 +77,7 @@
       "updatedAt": "2026-04-03T08:10:00"
     },
     {
-      "id": 6,
+      "id": "6",
       "userId": 1,
       "type": "expense",
       "category": "쇼핑",
@@ -89,7 +89,7 @@
       "updatedAt": "2026-04-03T21:00:00"
     },
     {
-      "id": 7,
+      "id": "7",
       "userId": 1,
       "type": "expense",
       "category": "카페",
@@ -101,7 +101,7 @@
       "updatedAt": "2026-04-05T14:30:00"
     },
     {
-      "id": 8,
+      "id": "8",
       "userId": 1,
       "type": "expense",
       "category": "주거",
@@ -113,7 +113,7 @@
       "updatedAt": "2026-04-05T18:00:00"
     },
     {
-      "id": 9,
+      "id": "9",
       "userId": 1,
       "type": "income",
       "category": "부업",
@@ -125,7 +125,7 @@
       "updatedAt": "2026-04-06T10:00:00"
     },
     {
-      "id": 10,
+      "id": "10",
       "userId": 1,
       "type": "expense",
       "category": "식비",
@@ -137,7 +137,7 @@
       "updatedAt": "2026-04-07T12:00:00"
     },
     {
-      "id": 11,
+      "id": "11",
       "userId": 1,
       "type": "income",
       "category": "급여",
@@ -149,7 +149,7 @@
       "updatedAt": "2026-03-01T09:00:00"
     },
     {
-      "id": 12,
+      "id": "12",
       "userId": 1,
       "type": "expense",
       "category": "교통",
@@ -161,7 +161,7 @@
       "updatedAt": "2026-03-02T08:15:00"
     },
     {
-      "id": 13,
+      "id": "13",
       "userId": 1,
       "type": "income",
       "category": "부업",
@@ -173,7 +173,7 @@
       "updatedAt": "2026-03-08T20:00:00"
     },
     {
-      "id": 14,
+      "id": "14",
       "userId": 1,
       "type": "expense",
       "category": "쇼핑",
@@ -185,7 +185,7 @@
       "updatedAt": "2026-03-12T13:40:00"
     },
     {
-      "id": 15,
+      "id": "15",
       "userId": 1,
       "type": "expense",
       "category": "카페",
@@ -197,7 +197,7 @@
       "updatedAt": "2026-03-18T16:20:00"
     },
     {
-      "id": 16,
+      "id": "16",
       "userId": 1,
       "type": "expense",
       "category": "식비",
@@ -211,7 +211,7 @@
   ],
   "challenges": [
     {
-      "id": 1,
+      "id": "1",
       "userId": 1,
       "title": "10만원 한달살기",
       "month": "2026-04",
@@ -242,7 +242,7 @@
   ],
   "challengeLeaderboard": [
     {
-      "id": 1,
+      "id": "1",
       "challengeId": 1,
       "rank": 1,
       "name": "박민준",
@@ -251,7 +251,7 @@
       "isMe": false
     },
     {
-      "id": 2,
+      "id": "2",
       "challengeId": 1,
       "rank": 2,
       "name": "이서연",
@@ -260,7 +260,7 @@
       "isMe": false
     },
     {
-      "id": 3,
+      "id": "3",
       "challengeId": 1,
       "rank": 3,
       "name": "김재훈",
@@ -269,7 +269,7 @@
       "isMe": false
     },
     {
-      "id": 4,
+      "id": "4",
       "challengeId": 1,
       "rank": 4,
       "name": "최수진",
@@ -278,7 +278,7 @@
       "isMe": false
     },
     {
-      "id": 5,
+      "id": "5",
       "challengeId": 1,
       "rank": 5,
       "name": "나 (홍길동)",
@@ -289,7 +289,7 @@
   ],
   "challengeHistory": [
     {
-      "id": 1,
+      "id": "1",
       "userId": 1,
       "title": "10만원 한달살기",
       "month": "2026-01",
@@ -298,7 +298,7 @@
       "savedAmount": 32700
     },
     {
-      "id": 2,
+      "id": "2",
       "userId": 1,
       "title": "카페 지출 줄이기",
       "month": "2026-03",
@@ -307,7 +307,7 @@
       "savedAmount": 12000
     },
     {
-      "id": 3,
+      "id": "3",
       "userId": 1,
       "title": "쇼핑 5만원 제한",
       "month": "2026-02",
@@ -318,12 +318,13 @@
   ],
   "missions": [
     {
-      "id": 1,
+      "id": "1",
       "userId": 1,
       "title": "집밥 5일 연속",
       "status": "in_progress",
       "currentCount": 4,
       "targetCount": 5
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
