@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex justify-center items-center">
-    <div class="relative w-[390px] h-[844px] bg-white shadow-2xl overflow-hidden flex flex-col">
+    <div id="app-container" class="relative w-[390px] h-[844px] bg-white shadow-2xl overflow-hidden flex flex-col">
       <NavBar />
       <RouterView />
       <BottomBar v-if="showBottomBar" />
