@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import apiClient from '../api/axios'
 
 export const useUserStore = defineStore('user', () => {
   // ────────────────────────────────────────────
@@ -19,9 +20,25 @@ export const useUserStore = defineStore('user', () => {
   ])
 
   // ────────────────────────────────────────────
-  // 계정 정보 유효성 (2단계) - TermsAccount에서 동기화
+  // 계정 정보 유효성 (2단계) - RegisterAccount에서 동기화
   // ────────────────────────────────────────────
   const isAccountStepValid = ref(false)
+
+  // ────────────────────────────────────────────
+  // 프로필 단계 유효성 (3단계) - RegisterProfile에서 동기화
+  // ────────────────────────────────────────────
+  const isProfileStepValid = ref(false)
+
+  // ────────────────────────────────────────────
+  // 회원가입 폼 데이터 (단계 간 유지)
+  // ────────────────────────────────────────────
+  const registerForm = ref({
+    email: '',
+    password: '',
+    nickname: '',
+    profileImage: null,
+    monthlyBudget: null,
+  })
 
   // ────────────────────────────────────────────
   // 계산된 상태
@@ -39,6 +56,7 @@ export const useUserStore = defineStore('user', () => {
   const isCurrentStepValid = computed(() => {
     if (currentStep.value === 1) return requiredAllChecked.value
     if (currentStep.value === 2) return isAccountStepValid.value
+    if (currentStep.value === 3) return isProfileStepValid.value
     return true
   })
 
@@ -72,9 +90,75 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  // 계정 정보 유효성 동기화 (TermsAccount에서 호출)
+  // 계정 정보 유효성 동기화 (RegisterAccount에서 호출)
   function setAccountStepValid(val) {
     isAccountStepValid.value = val
+  }
+
+  // 이메일 저장 (RegisterAccount에서 호출)
+  function setRegisterEmail(email) {
+    registerForm.value.email = email
+  }
+
+  // 비밀번호 저장 (RegisterAccount에서 호출)
+  function setRegisterPassword(password) {
+    registerForm.value.password = password
+  }
+
+  // 프로필 단계 유효성 동기화 (RegisterProfile에서 호출)
+  function setProfileStepValid(val) {
+    isProfileStepValid.value = val
+  }
+
+  // 닉네임 저장 (RegisterProfile에서 호출)
+  function setNickname(nickname) {
+    registerForm.value.nickname = nickname
+  }
+
+  // 프로필 이미지 저장 (RegisterProfile에서 호출)
+  function setProfileImage(image) {
+    registerForm.value.profileImage = image
+  }
+
+  // 월 목표 예산 저장 (RegisterProfile에서 호출)
+  function setMonthlyBudget(budget) {
+    registerForm.value.monthlyBudget = budget
+  }
+
+  // 회원가입 API 호출 - POST /users
+  async function register() {
+    const today = new Date().toISOString().split('T')[0]
+    const newUser = {
+      email: registerForm.value.email,
+      password: registerForm.value.password,
+      nickname: registerForm.value.nickname,
+      profileImage: registerForm.value.profileImage,
+      monthlyBudget: registerForm.value.monthlyBudget ?? 0,
+      level: 1,
+      challengeCount: 0,
+      thisMonthRank: 0,
+      streakDays: 0,
+      joinedAt: today,
+      currentChallengeId: null,
+      //testType: 'test',
+    }
+    const response = await apiClient.post('/users', newUser)
+    return response.data
+  }
+
+  // 가입 완료 후 상태 초기화
+  function resetRegister() {
+    currentStep.value = 1
+    terms.value.forEach((t) => (t.checked = false))
+    isAccountStepValid.value = false
+    isProfileStepValid.value = false
+    registerForm.value = {
+      email: '',
+      password: '',
+      nickname: '',
+      profileImage: null,
+      monthlyBudget: null,
+    }
   }
 
   return {
@@ -84,10 +168,19 @@ export const useUserStore = defineStore('user', () => {
     allChecked,
     requiredAllChecked,
     isCurrentStepValid,
+    registerForm,
     toggleAll,
     toggleTerm,
     nextStep,
     prevStep,
     setAccountStepValid,
+    setRegisterEmail,
+    setRegisterPassword,
+    setProfileStepValid,
+    setNickname,
+    setProfileImage,
+    setMonthlyBudget,
+    register,
+    resetRegister,
   }
 })
