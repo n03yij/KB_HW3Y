@@ -20,7 +20,7 @@ const props = defineProps({
   },
   amount: {
     type: Number,
-    default: 1000000,
+    default: 90000,
   },
   weekStatus: {
     type: Number,
@@ -56,14 +56,19 @@ const progressBarRef = ref(null)
 const mounted = ref(false)
 onMounted(() => {
   mounted.value = true
-  if (progressBarRef.value) {
-    progressBarWidth.value = progressBarRef.value.offsetWidth
 
-    const ro = new ResizeObserver(() => {
-      progressBarWidth.value = progressBarRef.value.offsetWidth
-    })
-    ro.observe(progressBarRef.value)
-  }
+  const el = progressBarRef.value
+  if (!el) return
+
+  progressBarWidth.value = el.offsetWidth
+
+  const ro = new ResizeObserver(() => {
+    if (el) {
+      progressBarWidth.value = el.offsetWidth
+    }
+  })
+
+  ro.observe(el)
 })
 
 // 초과 여부, 초과 금액
@@ -96,27 +101,22 @@ const characterStyle = computed(() => {
 
 <template>
   <div
-    class="px-4 py-3 rounded-[24px] shadow-sm relative flex flex-col justify-between overflow-visible"
-    style="background-color: var(--color-kb-yellow)"
+    class="bg-kb-yellow px-4 py-3 rounded-[24px] shadow-sm relative flex flex-col justify-between overflow-visible"
   >
     <!-- 상단 정보 -->
     <div class="leading-tight space-y-0.5">
-      <span
-        class="text-[10px] px-2 py-0.5 rounded-full font-medium"
-        style="background-color: rgba(0, 0, 0, 0.1); color: var(--color-kb-gray)"
-        >{{ currentMonth }}월 진행 중</span
-      >
-      <h2 class="text-xl font-bold mt-0.5" style="color: var(--color-kb-dark-gray)">{{ title }}</h2>
-      <p class="text-[11px] opacity-70" style="color: var(--color-kb-gray)">
-        {{ category }} · {{ periodText }}
-      </p>
+      <span class="text-[10px] px-2 py-0.5 rounded-full font-medium bg-black/10 text-kb-gray">
+        {{ currentMonth }}월 진행 중
+      </span>
+      <h2 class="text-xl font-bold mt-0.5 text-kb-dark-gray">{{ title }}</h2>
+      <p class="text-[11px] opacity-70 text-kb-gray">{{ category }} · {{ periodText }}</p>
     </div>
 
     <!-- 사용 금액 -->
     <div class="flex justify-between items-end mb-0.5">
       <div>
-        <p class="text-[11px] opacity-70" style="color: var(--color-kb-gray)">사용 금액</p>
-        <p class="text-xl font-extrabold leading-none" style="color: var(--color-kb-expense)">
+        <p class="text-[11px] opacity-70 text-kb-gray">사용 금액</p>
+        <p class="text-xl font-extrabold leading-none text-kb-expense">
           {{ amount.toLocaleString() }}<span class="text-lg ml-0.5">원</span>
         </p>
       </div>
@@ -125,11 +125,7 @@ const characterStyle = computed(() => {
       <div class="mb-1">
         <div
           class="text-[10px] font-bold px-2 py-1 rounded-full shadow-sm"
-          :style="
-            isOver
-              ? 'background-color: var(--color-kb-icon-pink); color: var(--color-kb-expense);'
-              : 'background-color: var(--color-kb-icon-green); color: var(--color-kb-income);'
-          "
+          :class="isOver ? 'bg-kb-icon-pink text-kb-expense' : 'bg-kb-icon-green text-kb-income'"
         >
           {{
             isOver ? `${overAmount.toLocaleString()}원 초과` : `${saved.toLocaleString()}원 남음`
@@ -141,8 +137,9 @@ const characterStyle = computed(() => {
     <!-- 진행바 + 캐릭터 영역 -->
     <div class="relative pt-3 mb-2">
       <!-- 라무 캐릭터 -->
-      <div class="absolute bottom-[30%] z-10" :style="characterStyle">
+      <div class="absolute bottom-[25%] z-10" :style="characterStyle">
         <img
+          :key="isOver ? 'end' : 'push'"
           :src="currentImg"
           alt="character"
           :class="[isOver ? 'w-16 h-11' : 'w-11 h-11']"
@@ -152,24 +149,15 @@ const characterStyle = computed(() => {
 
       <!-- 진행바 영역 -->
       <div ref="progressBarRef" class="w-full">
-        <div
-          class="w-full h-2.5 rounded-full overflow-hidden"
-          style="background-color: rgba(0, 0, 0, 0.1)"
-        >
+        <div class="w-full h-2.5 rounded-full overflow-hidden bg-black/10">
           <div
             class="h-full rounded-full transition-all duration-500"
-            :style="{
-              width: progressPercent + '%',
-              background: 'var(--gradient-kb-yellow)',
-            }"
+            :style="{ width: progressPercent + '%', background: 'var(--gradient-kb-yellow)' }"
           ></div>
         </div>
 
         <!-- 진행바 눈금 -->
-        <div
-          class="flex justify-between text-[9px] mt-2 font-medium opacity-60 px-1"
-          style="color: var(--color-kb-gray)"
-        >
+        <div class="flex justify-between text-[9px] mt-2 font-medium opacity-60 px-1 text-kb-gray">
           <span>0원</span>
           <span>{{ (maxAmount / 2).toLocaleString() }}원</span>
           <span>{{ maxAmount.toLocaleString() }}원</span>
@@ -182,19 +170,19 @@ const characterStyle = computed(() => {
       <div
         v-for="i in 4"
         :key="i"
-        class="text-center py-1 rounded-xl text-[11px] font-bold transition-all"
-        :style="
+        class="text-center py-1 rounded-xl text-[11px] font-bold transition-all text-kb-dark-gray"
+        :class="
           i === weekStatus
-            ? 'background-color: var(--gradient-kb-yellow); color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transform: scale(1.05);'
+            ? 'bg-kb-yellow text-white shadow-sm scale-105'
             : i < weekStatus
-              ? 'background-color: rgba(255,255,255,0.6); color: var(--color-kb-dark-gray);'
-              : 'background-color: rgba(255,255,255,0.28); color: var(--color-kb-dark-gray);'
+              ? 'bg-white/60'
+              : 'bg-white/30'
         "
       >
         {{ i }}주
         <div
           class="text-[9px] font-normal opacity-80"
-          :style="i < weekStatus ? 'color: var(--color-kb-income)' : ''"
+          :class="i < weekStatus ? 'text-kb-income' : ''"
         >
           <span v-if="i < weekStatus">완료</span>
           <span v-else-if="i === weekStatus">진행중</span>

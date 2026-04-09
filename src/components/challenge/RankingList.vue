@@ -34,49 +34,49 @@ const myRanking = computed(() => {
     <!-- 제목 -->
     <div class="flex items-center gap-1 mb-2">
       <img :src="iconMap.trophy" alt="trophy" class="w-5 h-5" />
-      <h3 class="text-lg font-bold text-[#1A1A1A]">절약 랭킹</h3>
+      <h3 class="text-lg font-bold text-kb-profit">절약 랭킹</h3>
     </div>
 
     <!-- 랭킹 리스트 -->
     <div class="flex flex-col gap-3">
-      <div class="bg-white rounded-[20px] overflow-hidden border border-gray-50 shadow-sm">
+      <div class="bg-kb-card rounded-[20px] overflow-hidden border border-kb-divider shadow-sm">
         <div
           v-for="(item, index) in topFour"
           :key="item.rank"
           class="flex items-center justify-between px-3 py-2"
-          :class="{ 'border-b border-gray-100': index !== 3 }"
+          :class="{ 'border-b border-kb-divider': index !== 3 }"
         >
           <div class="flex items-center gap-4">
             <span
               class="text-base font-bold w-4 text-center"
               :class="
                 item.rank === 1
-                  ? 'text-[#FFBC00]'
+                  ? 'text-kb-yellow'
                   : item.rank === 2
-                    ? 'text-gray-500'
+                    ? 'text-kb-muted'
                     : item.rank === 3
-                      ? 'text-[#A05030]'
-                      : 'text-gray-300'
+                      ? 'text-kb-empty'
+                      : 'text-kb-line'
               "
             >
               {{ item.rank }}
             </span>
             <div
-              class="w-10 h-10 rounded-full bg-[#FFF9E5] flex items-center justify-center text-[#8A6800] font-bold"
+              class="w-10 h-10 rounded-full bg-kb-icon-yellow flex items-center justify-center text-kb-dark-gray font-bold"
             >
               {{ item.initial }}
             </div>
             <div>
-              <p class="font-bold text-[14px] text-gray-900 leading-tight">{{ item.name }}</p>
-              <p class="text-[11px] text-gray-400 font-medium">{{ item.category }}</p>
+              <p class="font-bold text-[14px] text-kb-profit leading-tight">{{ item.name }}</p>
+              <p class="text-[11px] text-kb-muted font-medium">{{ item.category }}</p>
             </div>
           </div>
 
           <div class="text-right">
-            <p class="font-bold text-[14px] text-gray-900 leading-tight">
+            <p class="font-bold text-[14px] text-kb-profit leading-tight">
               {{ item.spent.toLocaleString() }}원
             </p>
-            <p class="text-[11px] text-[#00A361] font-semibold opacity-80">
+            <p class="text-[11px] text-kb-income font-semibold opacity-80">
               {{ item.saved.toLocaleString() }}원 절약
             </p>
           </div>
@@ -85,30 +85,30 @@ const myRanking = computed(() => {
 
       <div
         v-if="myRanking"
-        class="flex items-center justify-between p-4 h-[56px] rounded-[20px] bg-[#FFF9D6] border-2 border-[#FFBC00] shadow-sm"
+        class="flex items-center justify-between p-4 h-[56px] rounded-[20px] bg-kb-card-yellow border-2 border-kb-yellow shadow-sm"
       >
         <div class="flex items-center gap-4">
-          <span class="text-base font-bold w-4 text-center text-[#8A6800]">{{
+          <span class="text-base font-bold w-4 text-center text-kb-dark-gray">{{
             myRanking?.rank
           }}</span>
           <div
-            class="w-10 h-10 rounded-full bg-[#FFBC00] flex items-center justify-center text-[#8A6800] font-bold"
+            class="w-10 h-10 rounded-full bg-kb-yellow flex items-center justify-center text-kb-dark-gray font-bold"
           >
             {{ myRanking?.initial }}
           </div>
           <div>
-            <p class="font-bold text-[14px] text-gray-900 leading-tight">{{ myRanking?.name }}</p>
-            <p class="text-[11px] text-[#8A6800] opacity-60 font-medium">
+            <p class="font-bold text-[14px] text-kb-profit leading-tight">{{ myRanking?.name }}</p>
+            <p class="text-[11px] text-kb-dark-gray opacity-60 font-medium">
               {{ myRanking?.category }}
             </p>
           </div>
         </div>
 
         <div class="text-right">
-          <p class="font-bold text-[14px] text-gray-900 leading-tight">
+          <p class="font-bold text-[14px] text-kb-profit leading-tight">
             {{ myRanking?.spent?.toLocaleString() }}원
           </p>
-          <p class="text-[11px] text-[#00A361] font-semibold">
+          <p class="text-[11px] text-kb-income font-semibold">
             {{ myRanking?.saved?.toLocaleString() }}원 절약중
           </p>
         </div>
