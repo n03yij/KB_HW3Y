@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { computed } from 'vue'
+import { iconMap } from '@/utils/icons'
 
 const props = defineProps({
   title: String,
@@ -20,28 +21,48 @@ const props = defineProps({
   percent: Number,
 })
 
+const categoryIconMap = {
+  식비: iconMap.cutlery,
+  카페: iconMap.coffee,
+  쇼핑: iconMap.shopping,
+  교통: iconMap.bus,
+  여가: iconMap.leisure,
+  의료: iconMap.medical,
+  여행: iconMap.suitcase,
+  투자: iconMap.invest,
+  급여: iconMap.salary,
+  부업: iconMap.sidejob,
+  기타: iconMap.etc,
+}
+
+const icon = computed(() => categoryIconMap[props.category] ?? iconMap.etc)
+
 // 상태별 스타일
 const statusStyle = {
   success: {
-    badge: 'bg-[#E8F5E9] text-[#4CAF50]',
-    bar: 'bg-[#4CAF50]',
+    badge: 'bg-kb-icon-green text-kb-income',
+    bar: 'bg-kb-income',
     text: '성공',
   },
   fail: {
-    badge: 'bg-[#FEE2E2] text-[#EF5350]',
-    bar: 'bg-[#EF5350]',
+    badge: 'bg-over-bg text-kb-expense',
+    bar: 'bg-kb-expense',
     text: '실패',
   },
 }
 </script>
 
 <template>
-  <div class="bg-white p-4 rounded-2xl shadow-sm border-[0.5px] border-[#E0E0E0]">
+  <div class="bg-kb-card p-4 rounded-2xl shadow-sm border-[0.5px] border-kb-line">
     <!-- 상단 -->
     <div class="flex justify-between items-center">
-      <div>
-        <div class="font-bold text-base">{{ title }}</div>
-        <div class="text-sm text-[#808080]">{{ category }} · {{ date }}</div>
+      <div class="flex items-center gap-3">
+        <!-- 아이콘 -->
+        <div class="w-10 h-10 rounded-full bg-kb-app-bg flex items-center justify-center">
+          <img :src="icon" alt="category-icon" class="w-6 h-6" />
+        </div>
+        <div class="font-bold text-base text-kb-profit">{{ title }}</div>
+        <div class="text-sm text-kb-muted">{{ category }} · {{ date }}</div>
       </div>
 
       <!-- 상태 뱃지 -->
@@ -51,17 +72,17 @@ const statusStyle = {
     </div>
 
     <!-- 금액 -->
-    <div class="flex justify-between text-sm text-[#808080] mt-4">
+    <div class="flex justify-between text-sm text-kb-muted mt-4">
       <div>{{ used.toLocaleString() }}원 사용</div>
 
-      <div :class="status === 'fail' ? 'text-[#991B1B]' : 'text-[#808080]'">
+      <div :class="status === 'fail' ? 'text-kb-expense' : 'text-kb-muted'">
         {{ saved.toLocaleString() }}원
         {{ status === 'fail' ? '초과' : '절약' }}
       </div>
     </div>
 
     <!-- 게이지 바 -->
-    <div class="mt-3 w-full h-2 bg-[#E0E0E0] rounded-full overflow-hidden">
+    <div class="mt-3 w-full h-2 bg-kb-line rounded-full overflow-hidden">
       <div
         class="h-full rounded-full transition-all duration-300"
         :class="statusStyle[status].bar"

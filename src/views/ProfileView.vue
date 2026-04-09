@@ -7,7 +7,7 @@ import ChallengeItem from '@/components/profile/ChallengeItem.vue'
 </script>
 
 <template>
-  <div class="h-full overflow-y-auto p-4 pb-20">
+  <div class="h-full overflow-y-auto p-4 pb-30">
     <ProfileCard />
     <ChallengeHistory />
   </div>

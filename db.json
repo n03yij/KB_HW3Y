@@ -271,6 +271,18 @@
       "createdAt": "2026-04-09T06:07:14.652Z",
       "updatedAt": "2026-04-09T06:07:14.652Z",
       "id": "Iikr1fd1yWc"
+    },
+    {
+      "userId": "pATImzNd7lY",
+      "type": "expense",
+      "category": "식비",
+      "amount": 7000,
+      "date": "2026-04-09",
+      "merchant": "몽글몽글",
+      "memo": "몽글몽글",
+      "createdAt": "2026-04-09T06:23:02.295Z",
+      "updatedAt": "2026-04-09T06:23:02.295Z",
+      "id": "IK3IYXENGkg"
     }
   ],
   "challenges": [

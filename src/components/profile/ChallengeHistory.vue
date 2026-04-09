@@ -53,9 +53,9 @@ const props = defineProps({
 
 <template>
   <div class="mt-6">
-    <h3 class="mb-2 text-lg font-bold text-[#1A1A1A]">챌린지 히스토리</h3>
+    <h3 class="mb-2 text-lg font-bold text-kb-profit">챌린지 히스토리</h3>
 
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-3">
       <ChallengeItem v-for="(item, index) in challenges" :key="item.id ?? index" v-bind="item" />
     </div>
   </div>
