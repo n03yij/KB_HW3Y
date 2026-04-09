@@ -5,6 +5,10 @@ import cutlery from '@/assets/cutlery.svg'
 import shoppingBag from '@/assets/shoppingBag.svg'
 import coffee from '@/assets/coffee.svg'
 import bus from '@/assets/bus.svg'
+import medical from '@/assets/Medical.svg'
+import leisure from '@/assets/leisure.svg'
+import invest from '@/assets/Invest.svg'
+import etc from '@/assets/Etc.svg'
 
 //TODO: api 연결 하면... 아래 임시 데이터 제거
 const monthlyData = ref([
@@ -33,6 +37,10 @@ const categoryData = ref([
   { icon: shoppingBag, name: '쇼핑', amount: 89000, max: 500000 },
   { icon: coffee, name: '카페', amount: 32000, max: 500000 },
   { icon: bus, name: '교통', amount: 12500, max: 500000 },
+  { icon: medical, name: '의료', amount: 0, max: 500000 },
+  { icon: leisure, name: '여가', amount: 0, max: 500000 },
+  { icon: invest, name: '투자', amount: 0, max: 500000 },
+  { icon: etc, name: '기타', amount: 0, max: 500000 },
 ])
 
 // SVG 차트 계산
