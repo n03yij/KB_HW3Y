@@ -157,7 +157,7 @@ watch(
           <article
             v-for="card in summaryCards"
             :key="card.label"
-            class="rounded-[18px] bg-kb-card-yellow px-2 py-4 text-center shadow-sm"
+            class="rounded-[18px] bg-kb-card-yellow px-2 py-2 text-center shadow-sm"
           >
             <p class="text-[13px] font-medium text-kb-gray">{{ card.label }}</p>
             <p
