@@ -37,62 +37,86 @@ const categoryIconMap = {
 
 const icon = computed(() => categoryIconMap[props.category] ?? iconMap.etc)
 
-// 상태별 스타일
-const statusStyle = {
-  success: {
-    badge: 'bg-kb-icon-green text-kb-income',
-    bar: 'bg-kb-income',
-    text: '성공',
-  },
-  fail: {
-    badge: 'bg-over-bg text-kb-expense',
-    bar: 'bg-kb-expense',
-    text: '실패',
-  },
-  active: {
-    badge: 'bg-kb-icon-yellow text-kb-dark-gray',
-    bar: 'bg-kb-yellow',
-    text: '진행중',
-  },
-}
+const statusTheme = computed(() => {
+  const theme = {
+    success: {
+      card: 'border-[#ebe3d9] bg-white',
+      iconWrap: 'bg-kb-icon-green',
+      badge: 'bg-kb-icon-green text-kb-income',
+      bar: 'bg-kb-income',
+      amount: 'text-[#8f877b]',
+      text: '성공',
+    },
+    fail: {
+      card: 'border-[#ebe3d9] bg-white',
+      iconWrap: 'bg-[#fde9e6]',
+      badge: 'bg-over-bg text-kb-expense',
+      bar: 'bg-[#ff5a5a]',
+      amount: 'text-kb-expense',
+      text: '실패',
+    },
+    active: {
+      card: 'border-kb-yellow bg-[#fff8ea]',
+      iconWrap: 'bg-kb-yellow',
+      badge: 'bg-kb-yellow text-white',
+      bar: 'bg-kb-yellow',
+      amount: 'text-[#8f877b]',
+      text: '진행중',
+    },
+  }
+
+  return theme[props.status] ?? theme.success
+})
+
+const progressWidth = computed(() => {
+  const value = Number(props.percent ?? 0)
+  return `${Math.max(0, Math.min(value, 100))}%`
+})
 </script>
 
 <template>
-  <div class="bg-kb-card p-4 rounded-2xl shadow-sm border-[0.5px] border-kb-line">
-    <!-- 상단 -->
-    <div class="flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <!-- 아이콘 -->
-        <div class="w-10 h-10 rounded-full bg-kb-app-bg flex items-center justify-center">
-          <img :src="icon" alt="category-icon" class="w-6 h-6" />
+  <div
+    class="rounded-[16px] border px-3 py-3 shadow-[0_2px_8px_rgba(0,0,0,0.05)] transition-colors"
+    :class="statusTheme.card"
+  >
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex min-w-0 flex-1 items-center gap-3">
+        <div
+          class="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[12px]"
+          :class="statusTheme.iconWrap"
+        >
+          <img :src="icon" alt="category-icon" class="h-5 w-5 object-contain" />
         </div>
-        <div class="font-bold text-base text-kb-profit">{{ title }}</div>
-        <div class="text-sm text-kb-muted">{{ category }} · {{ date }}</div>
+        <div class="min-w-0 flex-1">
+          <div class="truncate text-[15px] font-extrabold tracking-[-0.03em] text-kb-profit">
+            {{ title }}
+          </div>
+          <div class="mt-0.5 text-[11px] font-medium text-[#9d968c]">{{ category }} · {{ date }}</div>
+        </div>
       </div>
 
-      <!-- 상태 뱃지 -->
-      <span class="text-xs px-3 py-1 rounded-full font-medium" :class="statusStyle[status].badge">
-        {{ statusStyle[status].text }}
+      <span
+        class="shrink-0 rounded-full px-3 py-1 text-[11px] font-bold leading-none whitespace-nowrap"
+        :class="statusTheme.badge"
+      >
+        {{ statusTheme.text }}
       </span>
     </div>
 
-    <!-- 금액 -->
-    <div class="flex justify-between text-sm text-kb-muted mt-4">
+    <div class="mt-3 flex items-center justify-between text-[11px] font-medium text-[#8f877b]">
       <div>{{ used.toLocaleString() }}원 사용</div>
-
-      <div :class="status === 'fail' ? 'text-kb-expense' : 'text-kb-muted'">
+      <div :class="statusTheme.amount">
         {{ saved.toLocaleString() }}원
         {{ status === 'fail' ? '초과' : '절약' }}
       </div>
     </div>
 
-    <!-- 게이지 바 -->
-    <div class="mt-3 w-full h-2 bg-kb-line rounded-full overflow-hidden">
+    <div class="mt-2 h-[6px] w-full overflow-hidden rounded-full bg-[#dfdfdf]">
       <div
         class="h-full rounded-full transition-all duration-300"
-        :class="statusStyle[status].bar"
-        :style="{ width: percent + '%' }"
-      ></div>
+        :class="statusTheme.bar"
+        :style="{ width: progressWidth }"
+      />
     </div>
   </div>
 </template>

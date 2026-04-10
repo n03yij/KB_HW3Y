@@ -4,12 +4,14 @@ import { computed, onMounted, ref, watch } from 'vue'
 
 const HEADER_HEIGHT = 60
 const DEFAULT_HEIGHT = 520
+const DISMISS_DRAG_THRESHOLD = 96
 const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토']
 
 const isVisible = ref(false)
 
 const sectionRef = ref(null)
 const modalHeight = ref(DEFAULT_HEIGHT)
+const dragOffsetY = ref(0)
 const isDragging = ref(false)
 const dragStartY = ref(0)
 const dragStartHeight = ref(DEFAULT_HEIGHT)
@@ -19,7 +21,7 @@ const modalStyle = computed(() => ({
   transition: isDragging.value
     ? 'none'
     : 'height 0.3s cubic-bezier(0.32, 0.72, 0, 1), transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
-  transform: isVisible.value ? 'translateY(0)' : 'translateY(100%)',
+  transform: isVisible.value ? `translateY(${dragOffsetY.value}px)` : 'translateY(100%)',
 }))
 
 const getMaxHeight = () => {
@@ -28,6 +30,7 @@ const getMaxHeight = () => {
 }
 
 const onPointerDown = (e) => {
+  if (props.isSaving) return
   isDragging.value = true
   dragStartY.value = e.clientY
   dragStartHeight.value = modalHeight.value
@@ -38,12 +41,31 @@ const onPointerMove = (e) => {
   if (!isDragging.value) return
   const delta = dragStartY.value - e.clientY
   const maxH = getMaxHeight()
-  modalHeight.value = Math.min(Math.max(dragStartHeight.value + delta, DEFAULT_HEIGHT), maxH)
+  const nextHeight = dragStartHeight.value + delta
+
+  if (nextHeight >= DEFAULT_HEIGHT) {
+    modalHeight.value = Math.min(nextHeight, maxH)
+    dragOffsetY.value = 0
+    return
+  }
+
+  modalHeight.value = DEFAULT_HEIGHT
+  dragOffsetY.value = Math.min(DEFAULT_HEIGHT, DEFAULT_HEIGHT - nextHeight)
 }
 
-const onPointerUp = () => {
+const onPointerUp = (e) => {
   if (!isDragging.value) return
   isDragging.value = false
+  if (e.currentTarget?.hasPointerCapture?.(e.pointerId)) {
+    e.currentTarget.releasePointerCapture(e.pointerId)
+  }
+
+  if (dragOffsetY.value >= DISMISS_DRAG_THRESHOLD) {
+    closeModal()
+    return
+  }
+
+  dragOffsetY.value = 0
   const maxH = getMaxHeight()
   const midpoint = (DEFAULT_HEIGHT + maxH) / 2
   modalHeight.value = modalHeight.value > midpoint ? maxH : DEFAULT_HEIGHT
@@ -197,6 +219,8 @@ onMounted(() => {
 
 const closeModal = () => {
   if (props.isSaving) return
+  isDragging.value = false
+  dragOffsetY.value = 0
   isVisible.value = false
   setTimeout(() => emit('close'), 320)
 }
@@ -243,6 +267,7 @@ const handleSubmit = () => {
           @pointerdown="onPointerDown"
           @pointermove="onPointerMove"
           @pointerup="onPointerUp"
+          @pointercancel="onPointerUp"
         ></div>
 
         <div class="mt-4 flex items-center justify-between">

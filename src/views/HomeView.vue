@@ -46,7 +46,7 @@ const summaryCards = computed(() => [
   {
     label: '순이익',
     amount: `${monthlySummary.value.balance >= 0 ? '+' : '-'}${formatCompactWon(monthlySummary.value.balance)}`,
-    amountClass: 'text-kb-profit',
+    amountClass: monthlySummary.value.balance >= 0 ? 'text-kb-income' : 'text-kb-expense',
   },
 ])
 

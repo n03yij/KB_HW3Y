@@ -108,114 +108,125 @@ function profitSign(value) {
 
 <template>
   <div
-    class="flex flex-col gap-[12px] p-[16px] pb-[120px] bg-kb-app-bg overflow-y-auto scrollbar-hide flex-1 min-h-0"
+    class="h-full overflow-y-auto scrollbar-hide bg-kb-app-bg"
   >
-    <section class="bg-kb-card rounded-[16px] p-[20px] shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
-      <h2 class="text-[15px] font-[700] text-kb-profit m-0 mb-[16px]">월별 수입·지출</h2>
+    <div class="flex min-h-full flex-col gap-[12px] p-[16px] pb-[120px]">
+      <section class="bg-kb-card rounded-[16px] p-[20px] shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
+        <h2 class="text-[15px] font-[700] text-kb-profit m-0 mb-[16px]">월별 수입·지출</h2>
 
-      <div class="flex flex-col items-center">
-        <svg
-          :viewBox="`0 0 ${chartWidth} 120`"
-          class="w-full h-[120px] overflow-visible"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g v-for="(data, i) in monthlyData" :key="data.month">
-            <rect
-              v-if="data.income > 0"
-              :x="incomeX(i)"
-              :y="barY(data.income)"
-              :width="barWidth"
-              :height="barHeight(data.income)"
-              class="fill-kb-income"
-              rx="3"
-            />
-            <rect
-              v-if="data.expense > 0"
-              :x="expenseX(i)"
-              :y="barY(data.expense)"
-              :width="barWidth"
-              :height="barHeight(data.expense)"
-              class="fill-kb-expense"
-              rx="3"
-            />
-            <text
-              :x="i * gap + gap / 2"
-              y="116"
-              text-anchor="middle"
-              class="fill-kb-muted text-[11px]"
-            >
-              {{ data.month }}
-            </text>
-          </g>
-        </svg>
-
-        <div class="flex gap-[16px] mt-[10px]">
-          <span class="text-[12px] text-kb-income">● 수입</span>
-          <span class="text-[12px] text-kb-expense">● 지출</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="bg-kb-card rounded-[16px] p-[20px] shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
-      <h2 class="text-[15px] font-[700] text-kb-profit m-0 mb-[16px]">월별 순이익</h2>
-      <table class="w-full border-collapse text-[14px]">
-        <thead>
-          <tr class="border-b border-kb-divider">
-            <th class="text-left py-[4px] pr-0 pl-0 pb-[8px] text-[12px] font-[500] text-kb-muted">
-              월
-            </th>
-            <th class="text-right py-[4px] pr-0 pl-0 pb-[8px] text-[12px] font-[500] text-kb-muted">
-              수입
-            </th>
-            <th class="text-right py-[4px] pr-0 pl-0 pb-[8px] text-[12px] font-[500] text-kb-muted">
-              지출
-            </th>
-            <th class="text-right py-[4px] pr-0 pl-0 pb-[8px] text-[12px] font-[500] text-kb-muted">
-              순이익
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="row in profitData"
-            :key="row.month"
-            class="border-b border-kb-divider last:border-b-0"
+        <div class="flex flex-col items-center">
+          <svg
+            :viewBox="`0 0 ${chartWidth} 120`"
+            class="w-full h-[120px] overflow-visible"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <td class="py-[10px] text-left font-[700] text-kb-profit">{{ row.month }}</td>
-            <td class="py-[10px] text-right font-[600] text-kb-income">
-              +{{ formatAmount(row.income) }}
-            </td>
-            <td class="py-[10px] text-right font-[600] text-kb-expense">
-              {{ formatAmount(row.expense) }}
-            </td>
-            <td class="py-[10px] text-right font-[600] text-kb-profit">
-              {{ profitSign(row.profit) }}{{ formatAmount(row.profit) }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+            <g v-for="(data, i) in monthlyData" :key="data.month">
+              <rect
+                v-if="data.income > 0"
+                :x="incomeX(i)"
+                :y="barY(data.income)"
+                :width="barWidth"
+                :height="barHeight(data.income)"
+                class="fill-kb-income"
+                rx="3"
+              />
+              <rect
+                v-if="data.expense > 0"
+                :x="expenseX(i)"
+                :y="barY(data.expense)"
+                :width="barWidth"
+                :height="barHeight(data.expense)"
+                class="fill-kb-expense"
+                rx="3"
+              />
+              <text
+                :x="i * gap + gap / 2"
+                y="116"
+                text-anchor="middle"
+                class="fill-kb-muted text-[11px]"
+              >
+                {{ data.month }}
+              </text>
+            </g>
+          </svg>
 
-    <section class="bg-kb-card rounded-[16px] p-[20px] shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
-      <h2 class="text-[15px] font-[700] text-kb-profit m-0 mb-[16px]">카테고리별 지출</h2>
-      <ul class="list-none m-0 p-0 flex flex-col gap-[14px]">
-        <li v-for="item in categoryData" :key="item.name" class="flex items-center gap-[8px]">
-          <div class="w-[20px] h-[20px] flex items-center justify-center flex-shrink-0">
-            <img :src="item.icon" :alt="item.name" class="w-full h-full object-contain" />
+          <div class="flex gap-[16px] mt-[10px]">
+            <span class="text-[12px] text-kb-income">● 수입</span>
+            <span class="text-[12px] text-kb-expense">● 지출</span>
           </div>
-          <span class="text-[13px] text-kb-soft-text w-[32px] flex-shrink-0">{{ item.name }}</span>
-          <div class="flex-1 h-[8px] bg-kb-divider rounded-full overflow-hidden">
-            <div
-              class="h-full bg-kb-yellow rounded-full transition-all duration-[0.4s] ease-in-out"
-              :style="{ width: (item.amount / item.max) * 100 + '%' }"
-            ></div>
-          </div>
-          <span class="text-[13px] font-[600] text-kb-profit w-[80px] text-right flex-shrink-0">
-            {{ item.amount.toLocaleString() }}원
-          </span>
-        </li>
-      </ul>
-    </section>
+        </div>
+      </section>
+
+      <section class="bg-kb-card rounded-[16px] p-[20px] shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
+        <h2 class="text-[15px] font-[700] text-kb-profit m-0 mb-[16px]">월별 순이익</h2>
+        <table class="w-full border-collapse text-[14px]">
+          <thead>
+            <tr class="border-b border-kb-divider">
+              <th class="text-left py-[4px] pr-0 pl-0 pb-[8px] text-[12px] font-[500] text-kb-muted">
+                월
+              </th>
+              <th
+                class="text-right py-[4px] pr-0 pl-0 pb-[8px] text-[12px] font-[500] text-kb-muted"
+              >
+                수입
+              </th>
+              <th
+                class="text-right py-[4px] pr-0 pl-0 pb-[8px] text-[12px] font-[500] text-kb-muted"
+              >
+                지출
+              </th>
+              <th
+                class="text-right py-[4px] pr-0 pl-0 pb-[8px] text-[12px] font-[500] text-kb-muted"
+              >
+                순이익
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="row in profitData"
+              :key="row.month"
+              class="border-b border-kb-divider last:border-b-0"
+            >
+              <td class="py-[10px] text-left font-[700] text-kb-profit">{{ row.month }}</td>
+              <td class="py-[10px] text-right font-[600] text-kb-income">
+                +{{ formatAmount(row.income) }}
+              </td>
+              <td class="py-[10px] text-right font-[600] text-kb-expense">
+                {{ formatAmount(row.expense) }}
+              </td>
+              <td
+                class="py-[10px] text-right font-[600]"
+                :class="row.profit >= 0 ? 'text-kb-income' : 'text-kb-expense'"
+              >
+                {{ profitSign(row.profit) }}{{ formatAmount(row.profit) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="bg-kb-card rounded-[16px] p-[20px] shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
+        <h2 class="text-[15px] font-[700] text-kb-profit m-0 mb-[16px]">카테고리별 지출</h2>
+        <ul class="list-none m-0 p-0 flex flex-col gap-[14px]">
+          <li v-for="item in categoryData" :key="item.name" class="flex items-center gap-[8px]">
+            <div class="w-[20px] h-[20px] flex items-center justify-center flex-shrink-0">
+              <img :src="item.icon" :alt="item.name" class="w-full h-full object-contain" />
+            </div>
+            <span class="text-[13px] text-kb-soft-text w-[32px] flex-shrink-0">{{ item.name }}</span>
+            <div class="flex-1 h-[8px] bg-kb-divider rounded-full overflow-hidden">
+              <div
+                class="h-full bg-kb-yellow rounded-full transition-all duration-[0.4s] ease-in-out"
+                :style="{ width: (item.amount / item.max) * 100 + '%' }"
+              ></div>
+            </div>
+            <span class="text-[13px] font-[600] text-kb-profit w-[80px] text-right flex-shrink-0">
+              {{ item.amount.toLocaleString() }}원
+            </span>
+          </li>
+        </ul>
+      </section>
+    </div>
   </div>
 </template>
 

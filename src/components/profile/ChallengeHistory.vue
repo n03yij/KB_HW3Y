@@ -30,7 +30,6 @@ async function fetchHistory(showSpinner = true) {
 
   if (showSpinner) isLoading.value = true
   try {
-    // 과거 히스토리 + 현재 진행 중인 챌린지 병렬 조회
     const currentChallengeId = authStore.currentUser?.currentChallengeId
     const [history, currentChallenge] = await Promise.all([
       getChallengeHistory(userId),
@@ -39,7 +38,6 @@ async function fetchHistory(showSpinner = true) {
         : null,
     ])
 
-    // 현재 진행 중인 챌린지 → monthlyChallenge에서 제목/월 가져오기
     let currentItem = null
     if (currentChallenge) {
       const mc = await apiClient
@@ -48,6 +46,7 @@ async function fetchHistory(showSpinner = true) {
       currentItem = {
         id: `current-${currentChallenge.id}`,
         title: mc.title,
+        category: mc.category,
         date: formatMonth(mc.month),
         status: 'active',
         used: currentChallenge.spentAmount,
@@ -65,6 +64,7 @@ async function fetchHistory(showSpinner = true) {
       .map((item) => ({
         id: item.id,
         title: item.title,
+        category: item.category,
         date: formatMonth(item.month),
         status: item.status,
         used: item.spentAmount,
@@ -90,8 +90,10 @@ onActivated(() => fetchHistory(false))
 </script>
 
 <template>
-  <div class="mt-6">
-    <h3 class="mb-2 text-lg font-bold text-kb-profit">챌린지 히스토리</h3>
+  <div class="mt-7">
+    <h3 class="mb-4 text-[18px] font-extrabold tracking-[-0.03em] text-kb-profit">
+      챌린지 히스토리
+    </h3>
 
     <div v-if="isLoading" class="flex justify-center py-6">
       <div
@@ -103,7 +105,7 @@ onActivated(() => fetchHistory(false))
       챌린지 히스토리가 없습니다.
     </div>
 
-    <div v-else class="flex flex-col gap-3">
+    <div v-else class="flex flex-col gap-4">
       <ChallengeItem v-for="item in challenges" :key="item.id" v-bind="item" />
     </div>
   </div>

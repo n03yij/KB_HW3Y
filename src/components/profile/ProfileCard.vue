@@ -25,14 +25,16 @@ function confirmLogout() {
 </script>
 
 <template>
-  <div class="bg-kb-card rounded-2xl p-4 shadow-sm relative">
+  <div
+    class="relative rounded-[28px] border border-[#e8e1d7] bg-kb-card px-6 py-6 shadow-[0_4px_14px_rgba(0,0,0,0.08)]"
+  >
     <!-- 로그아웃 버튼 -->
     <button
       @click="showLogoutModal = true"
-      class="absolute top-4 right-4 p-1 rounded-full hover:bg-kb-line transition-colors"
+      class="absolute right-6 top-6 rounded-full p-1.5 transition-colors hover:bg-[#f3efe8]"
       aria-label="로그아웃"
     >
-      <img :src="logoutIcon" alt="로그아웃" class="w-6 h-6" />
+      <img :src="logoutIcon" alt="로그아웃" class="h-6 w-6" />
     </button>
 
     <!-- 로그아웃 확인 모달 -->
@@ -69,52 +71,60 @@ function confirmLogout() {
     </Teleport>
 
     <!-- 상단 프로필 -->
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-4 pr-10">
       <!-- 프로필 이미지 -->
       <div
-        class="w-16 h-16 rounded-full bg-kb-yellow flex items-center justify-center text-white text-2xl font-bold"
+        class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-kb-yellow"
       >
         <img
           :src="authStore.currentUser?.profileImage || ramuFace"
           alt="프로필 이미지"
-          class="w-16 h-16 rounded-full"
+          class="h-16 w-16 rounded-full object-cover"
         />
       </div>
 
       <!-- 이름 & 아이디 & 뱃지 -->
-      <div class="flex-1">
+      <div class="min-w-0 flex-1">
         <div class="flex items-center gap-2">
-          <div class="text-lg font-bold text-kb-profit">{{ authStore.currentUser?.nickname }}</div>
+          <div class="truncate text-[18px] font-extrabold tracking-[-0.03em] text-kb-profit">
+            {{ authStore.currentUser?.nickname }}
+          </div>
           <span
-            class="text-xs px-2 py-1 rounded-full bg-kb-card-yellow text-kb-dark-gray font-medium"
+            class="shrink-0 rounded-full bg-kb-card-yellow px-3 py-1 text-[12px] font-bold text-kb-dark-gray"
           >
             Lv.{{ authStore.currentUser?.level ?? 1 }}
           </span>
         </div>
-        <div class="text-kb-muted text-sm">{{ authStore.currentUser?.email }}</div>
+        <div class="mt-1 truncate text-[14px] font-medium text-[#a39c92]">
+          {{ authStore.currentUser?.email }}
+        </div>
       </div>
     </div>
 
     <!-- 구분선 -->
-    <div class="border-t border-kb-line my-4"></div>
+    <div class="my-5 border-t border-[#e5ddd3]"></div>
 
     <!-- 하단 정보 -->
     <div class="flex justify-between text-center">
       <div class="flex-1">
-        <div class="text-xl font-bold">{{ authStore.currentUser?.challengeCount ?? 0 }}</div>
-        <div class="text-sm text-kb-muted">완료 챌린지</div>
+        <div class="text-[18px] font-extrabold tracking-[-0.03em] text-kb-profit">
+          {{ authStore.currentUser?.challengeCount ?? 0 }}
+        </div>
+        <div class="mt-1 text-[14px] font-medium text-[#a39c92]">완료 챌린지</div>
       </div>
 
       <div class="flex-1">
-        <div class="text-xl font-bold">{{ authStore.currentUser?.thisMonthRank ?? 0 }}위</div>
-        <div class="text-sm text-kb-muted">이번 달 랭킹</div>
+        <div class="text-[18px] font-extrabold tracking-[-0.03em] text-kb-profit">
+          {{ authStore.currentUser?.thisMonthRank ?? 0 }}위
+        </div>
+        <div class="mt-1 text-[14px] font-medium text-[#a39c92]">이번 달 랭킹</div>
       </div>
     </div>
 
     <!-- 프로필 수정 버튼 -->
     <button
       @click="isEditModalOpen = true"
-      class="w-full mt-3 py-2 rounded-xl border border-kb-line bg-kb-bg text-sm text-kb-muted hover:bg-kb-line transition-colors"
+      class="mt-5 h-[56px] w-full rounded-[18px] border border-[#ddd6ca] bg-white text-[15px] font-semibold text-[#9b948b] transition-colors hover:bg-[#f8f4ee]"
     >
       프로필 수정
     </button>
