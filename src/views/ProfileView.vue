@@ -5,7 +5,7 @@ import ChallengeHistory from '@/components/profile/ChallengeHistory.vue'
 </script>
 
 <template>
-  <div class="h-full bg-kb-app-bg overflow-y-auto scrollbar-hide px-4 pb-[112px] pt-4">
+  <div class="h-full bg-kb-app-bg overflow-y-auto scrollbar-hide px-4 pb-[120px] pt-4">
     <ProfileCard />
     <ChallengeHistory />
   </div>

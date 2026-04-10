@@ -90,7 +90,7 @@ watch(
 <template>
   <main class="relative h-full overflow-hidden bg-kb-app-bg text-kb-profit">
     <div
-      class="h-full pb-28"
+      class="h-full pb-[120px]"
       :class="isTransactionModalOpen ? 'overflow-hidden' : 'overflow-y-auto scrollbar-hide'"
     >
       <section class="bg-kb-yellow px-5 pb-5 pt-2">

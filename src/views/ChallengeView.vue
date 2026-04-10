@@ -7,7 +7,7 @@ import RankingList from '@/components/challenge/RankingList.vue'
 
 <template>
   <div class="h-full bg-kb-app-bg overflow-y-auto scrollbar-hide">
-    <div class="p-4 pb-25 overflow-visible">
+    <div class="p-4 pb-[120px] overflow-visible">
       <ChallengeCard />
       <RankingList />
     </div>
