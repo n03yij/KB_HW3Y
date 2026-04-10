@@ -33,13 +33,17 @@ onMounted(async () => {
     const currentChallengeId = authStore.currentUser?.currentChallengeId
     const [history, currentChallenge] = await Promise.all([
       getChallengeHistory(userId),
-      currentChallengeId ? apiClient.get(`/challenges/${currentChallengeId}`).then(r => r.data) : null,
+      currentChallengeId
+        ? apiClient.get(`/challenges/${currentChallengeId}`).then((r) => r.data)
+        : null,
     ])
 
     // 현재 진행 중인 챌린지 → monthlyChallenge에서 제목/월 가져오기
     let currentItem = null
     if (currentChallenge) {
-      const mc = await apiClient.get(`/monthlyChallenge/${currentChallenge.monthlyChallengeId}`).then(r => r.data)
+      const mc = await apiClient
+        .get(`/monthlyChallenge/${currentChallenge.monthlyChallengeId}`)
+        .then((r) => r.data)
       currentItem = {
         id: `current-${currentChallenge.id}`,
         title: mc.title,
@@ -47,7 +51,10 @@ onMounted(async () => {
         status: 'active',
         used: currentChallenge.spentAmount,
         saved: Math.max(mc.targetAmount - currentChallenge.spentAmount, 0),
-        percent: calcPercent(currentChallenge.spentAmount, Math.max(mc.targetAmount - currentChallenge.spentAmount, 0)),
+        percent: calcPercent(
+          currentChallenge.spentAmount,
+          Math.max(mc.targetAmount - currentChallenge.spentAmount, 0),
+        ),
       }
     }
 
@@ -73,14 +80,17 @@ onMounted(async () => {
     .slice()
     .sort((a, b) => b.month.localeCompare(a.month))
     .map((item) => ({
-    id: item.id,
-    title: item.title,
-    date: formatMonth(item.month),
-    status: item.status,
-    used: item.spentAmount,
-    saved: Math.abs(item.savedAmount),
-    percent: calcPercent(item.spentAmount, item.savedAmount),
-  }))
+      id: item.id,
+      title: item.title,
+      date: formatMonth(item.month),
+      status: item.status,
+      used: item.spentAmount,
+      saved: Math.abs(item.savedAmount),
+      percent: calcPercent(item.spentAmount, item.savedAmount),
+    }))
+
+  const successCount = history.filter((item) => item.status === 'success').length
+  await authStore.updateProfile({ challengeCount: successCount, level: successCount + 1 })
 })
 </script>
 
@@ -89,7 +99,9 @@ onMounted(async () => {
     <h3 class="mb-2 text-lg font-bold text-kb-profit">챌린지 히스토리</h3>
 
     <div v-if="isLoading" class="flex justify-center py-6">
-      <div class="w-6 h-6 border-2 border-kb-profit border-t-transparent rounded-full animate-spin" />
+      <div
+        class="w-6 h-6 border-2 border-kb-profit border-t-transparent rounded-full animate-spin"
+      />
     </div>
 
     <div v-else-if="challenges.length === 0" class="text-sm text-kb-muted text-center py-6">

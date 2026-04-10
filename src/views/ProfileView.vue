@@ -14,14 +14,7 @@ const streak = computed(() => `연속 ${user.value?.streakDays ?? 0}일`)
 
 <template>
   <div class="h-full bg-kb-app-bg overflow-y-auto scrollbar-hide p-4 pb-30">
-    <ProfileCard
-      :name="user?.nickname"
-      :username="user?.email"
-      :level="level"
-      :streak="streak"
-      :challenge-count="user?.challengeCount ?? 0"
-      :rank="user?.thisMonthRank ?? 0"
-    />
+    <ProfileCard />
     <ChallengeHistory />
   </div>
 </template>
