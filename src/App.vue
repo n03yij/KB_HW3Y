@@ -1,11 +1,15 @@
 <template>
-  <div class="sm:min-h-screen sm:bg-gray-100 sm:flex sm:justify-center sm:items-center">
-    <div id="app-container" class="relative w-full h-dvh sm:w-[390px] sm:h-[844px] sm:max-h-screen bg-white sm:shadow-2xl overflow-hidden flex flex-col">
+  <div class="min-h-[100dvh] bg-kb-app-bg sm:min-h-screen sm:bg-gray-100 sm:flex sm:justify-center sm:items-center">
+    <div
+      id="app-container"
+      class="relative flex w-full min-h-[100dvh] flex-col overflow-hidden bg-kb-app-bg sm:h-[844px] sm:min-h-0 sm:w-[390px] sm:max-h-screen sm:bg-white sm:shadow-2xl"
+    >
       <!-- v-if 로직을 하나로 합쳐서 관리하는 것이 깨끗합니다 -->
       <NavBar v-if="showNav" />
       <!-- 하단바/네비바가 없을 때 Splash가 꽉 차도록 flex-1 확인 -->
       <main
         class="relative flex-1 overflow-hidden"
+        :class="showNav ? 'bg-kb-app-bg' : 'bg-white'"
         @touchstart.passive="onTouchStart"
         @touchend.passive="onTouchEnd"
       >
