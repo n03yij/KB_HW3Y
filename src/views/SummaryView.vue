@@ -185,7 +185,10 @@ function profitSign(value) {
             <td class="py-[10px] text-right font-[600] text-kb-expense">
               {{ formatAmount(row.expense) }}
             </td>
-            <td class="py-[10px] text-right font-[600] text-kb-profit">
+            <td
+              class="py-[10px] text-right font-[600]"
+              :class="row.profit >= 0 ? 'text-kb-income' : 'text-kb-expense'"
+            >
               {{ profitSign(row.profit) }}{{ formatAmount(row.profit) }}
             </td>
           </tr>
