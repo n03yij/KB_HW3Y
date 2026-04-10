@@ -32,7 +32,6 @@ const defaultTransactionDate = computed(() => {
     : `${currentMonth.value}-01`
 })
 
-
 const summaryCards = computed(() => [
   {
     label: '수입',
@@ -50,7 +49,6 @@ const summaryCards = computed(() => [
     amountClass: 'text-kb-profit',
   },
 ])
-
 
 const moveMonth = (diff) => {
   const nextMonth = dayjs(`${currentMonth.value}-01`).add(diff, 'month').format('YYYY-MM')
@@ -127,10 +125,7 @@ watch(
             class="rounded-[18px] bg-kb-card-yellow px-2 py-2 text-center shadow-sm"
           >
             <p class="text-[13px] font-medium text-kb-gray">{{ card.label }}</p>
-            <p
-              class="mt-1 text-[15px] font-extrabold tracking-[-0.03em]"
-              :class="card.amountClass"
-            >
+            <p class="mt-1 text-[15px] font-extrabold tracking-[-0.03em]" :class="card.amountClass">
               {{ card.amount }}
             </p>
           </article>
@@ -206,7 +201,7 @@ watch(
       class="absolute bottom-[96px] right-6 z-20 flex h-[64px] w-[64px] items-center justify-center rounded-full bg-kb-yellow text-kb-dark-gray shadow-lg"
       @click="openTransactionModal"
     >
-      <span class="text-[38px] font-semibold leading-none">+</span>
+      <span class="text-[38px] font-semibold leading-none pb-1">+</span>
     </button>
 
     <TransactionModal
