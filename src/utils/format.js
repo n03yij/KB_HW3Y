@@ -5,7 +5,7 @@ export const formatCompactWon = (amount) => {
     return `${Math.round(absoluteAmount / 10000).toLocaleString()}만원`
   }
 
-  return `${Math.round(absoluteAmount / 1000).toLocaleString()}천원`
+  return `${Math.round(absoluteAmount / 10000).toLocaleString()}만원`
 }
 
 export const formatSignedWon = (amount) => {
