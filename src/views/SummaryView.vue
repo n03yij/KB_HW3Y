@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { getTransactions } from '@/api/transaction'
 import { iconMap } from '@/utils/icons'
+import { useAuthStore } from '@/stores/user'
 
 const categoryIconMap = {
   주거: iconMap.home,
@@ -15,11 +16,13 @@ const categoryIconMap = {
   기타: iconMap.etc,
 }
 
+const authStore = useAuthStore()
+
 const monthlyData = ref([])
 const categoryData = ref([])
 
 onMounted(async () => {
-  const transactions = await getTransactions()
+  const transactions = await getTransactions({ userId: authStore.currentUser?.id })
 
   // 월별 데이터 가공
   const monthMap = {}
