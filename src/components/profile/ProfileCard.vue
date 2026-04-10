@@ -22,33 +22,6 @@ function confirmLogout() {
   showLogoutModal.value = false
   handleLogout()
 }
-
-const props = defineProps({
-  name: {
-    type: String,
-    default: '홍길동',
-  },
-  username: {
-    type: String,
-    default: '@honggildong',
-  },
-  level: {
-    type: String,
-    default: 'Lv.7 절약왕',
-  },
-  streak: {
-    type: String,
-    default: '연속 32일',
-  },
-  challengeCount: {
-    type: Number,
-    default: 12,
-  },
-  rank: {
-    type: Number,
-    default: 5,
-  },
-})
 </script>
 
 <template>
@@ -108,22 +81,17 @@ const props = defineProps({
         />
       </div>
 
-      <!-- 이름 & 아이디 -->
+      <!-- 이름 & 아이디 & 뱃지 -->
       <div class="flex-1">
-        <div class="text-lg font-bold text-kb-profit">{{ name }}</div>
-        <div class="text-kb-muted text-sm">{{ username }}</div>
-
-        <!-- 뱃지 -->
-        <div class="flex gap-2 mt-2">
+        <div class="flex items-center gap-2">
+          <div class="text-lg font-bold text-kb-profit">{{ authStore.currentUser?.nickname }}</div>
           <span
             class="text-xs px-2 py-1 rounded-full bg-kb-card-yellow text-kb-dark-gray font-medium"
           >
-            {{ level }}
-          </span>
-          <span class="text-xs px-2 py-1 rounded-full bg-kb-icon-green text-kb-income font-medium">
-            {{ streak }}
+            Lv.{{ authStore.currentUser?.level ?? 1 }}
           </span>
         </div>
+        <div class="text-kb-muted text-sm">{{ authStore.currentUser?.email }}</div>
       </div>
     </div>
 
@@ -133,12 +101,12 @@ const props = defineProps({
     <!-- 하단 정보 -->
     <div class="flex justify-between text-center">
       <div class="flex-1">
-        <div class="text-xl font-bold">{{ challengeCount }}</div>
+        <div class="text-xl font-bold">{{ authStore.currentUser?.challengeCount ?? 0 }}</div>
         <div class="text-sm text-kb-muted">완료 챌린지</div>
       </div>
 
       <div class="flex-1">
-        <div class="text-xl font-bold">{{ rank }}위</div>
+        <div class="text-xl font-bold">{{ authStore.currentUser?.thisMonthRank ?? 0 }}위</div>
         <div class="text-sm text-kb-muted">이번 달 랭킹</div>
       </div>
     </div>
