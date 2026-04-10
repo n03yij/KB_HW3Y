@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/user'
 
 const authStore = useAuthStore()
 const challenge = ref(null)
+const monthlyChallenge = ref(null)
 const progressBarWidth = ref(0)
 const progressBarRef = ref(null)
 const mounted = ref(false)
@@ -17,6 +18,9 @@ onMounted(async () => {
   if (challengeId) {
     const res = await apiClient.get(`/challenges/${challengeId}`)
     challenge.value = res.data
+
+    const mcRes = await apiClient.get(`/monthlyChallenge/${res.data.monthlyChallengeId}`)
+    monthlyChallenge.value = mcRes.data
   }
 
   // fetch 후 DOM 업데이트 기다렸다가 진행바 측정
@@ -35,14 +39,10 @@ const currentMonth = new Date().getMonth() + 1
 const currentYear = new Date().getFullYear()
 const periodText = computed(() => `${currentYear}년 ${currentMonth}월 전체`)
 
-const title = computed(() => challenge.value?.title || '')
-const category = computed(() => {
-  const desc = challenge.value?.description || ''
-  const match = desc.match(/^(.+카테고리)/)
-  return match ? match[1] : desc
-})
+const title = computed(() => monthlyChallenge.value?.title || '')
+const category = computed(() => monthlyChallenge.value?.category || '')
 const amount = computed(() => challenge.value?.spentAmount || 0)
-const maxAmount = computed(() => challenge.value?.targetAmount || 100000)
+const maxAmount = computed(() => monthlyChallenge.value?.targetAmount || 100000)
 
 const saved = computed(() => Math.max(maxAmount.value - amount.value, 0))
 const progressPercent = computed(() => Math.min((amount.value / maxAmount.value) * 100, 100))
@@ -65,7 +65,7 @@ const characterStyle = computed(() => {
 
 <template>
   <div
-    v-if="!challenge"
+    v-if="!challenge || !monthlyChallenge"
     class="bg-kb-yellow px-4 py-3 rounded-[24px] shadow-sm h-48 flex items-center justify-center"
   >
     <p class="text-kb-gray text-sm">챌린지를 불러오는 중...</p>

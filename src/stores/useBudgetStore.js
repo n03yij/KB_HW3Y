@@ -12,6 +12,7 @@ import {
   getTransactions,
   updateTransaction,
 } from '../api/transaction'
+import apiClient from '../api/axios'
 
 export const ALL_FILTER = '전체'
 
@@ -180,6 +181,27 @@ export const useBudgetStore = defineStore('budget', () => {
     }
   }
 
+  const syncChallengeSpent = async (transactionMonth) => {
+    const authStore = useAuthStore()
+    const currentChallengeId = authStore.currentUser?.currentChallengeId
+    if (!currentChallengeId) return
+
+    const [challengeRes, allTransactions] = await Promise.all([
+      apiClient.get(`/challenges/${currentChallengeId}`),
+      getTransactions({ userId: userId.value, month: transactionMonth }),
+    ])
+    const challenge = challengeRes.data
+    const mcRes = await apiClient.get(`/monthlyChallenge/${challenge.monthlyChallengeId}`)
+    const mc = mcRes.data
+
+    const spent = allTransactions
+      .filter((t) => t.type === 'expense' && t.category === mc.category)
+      .reduce((sum, t) => sum + t.amount, 0)
+    const saved = Math.max(mc.targetAmount - spent, 0)
+
+    await apiClient.patch(`/challenges/${currentChallengeId}`, { spentAmount: spent, savedAmount: saved })
+  }
+
   const addTransaction = async (payload) => {
     isSaving.value = true
     errorMessage.value = ''
@@ -192,6 +214,12 @@ export const useBudgetStore = defineStore('budget', () => {
 
       if (dayjs(createdTransaction.date).format('YYYY-MM') === currentMonth.value) {
         transactions.value = [...transactions.value, createdTransaction].sort(byNewestDate)
+      }
+
+      // 지출이고 이번 달 거래면 챌린지 금액 동기화
+      if (createdTransaction.type === 'expense') {
+        const txMonth = dayjs(createdTransaction.date).format('YYYY-MM')
+        await syncChallengeSpent(txMonth)
       }
 
       return createdTransaction

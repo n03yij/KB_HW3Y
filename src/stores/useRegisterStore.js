@@ -113,6 +113,9 @@ export const useRegisterStore = defineStore('register', () => {
   // 회원가입 API 호출 - POST /users
   async function register() {
     const today = new Date().toISOString().split('T')[0]
+    const currentMonth = today.slice(0, 7) // 'YYYY-MM'
+
+    // 1. 유저 생성
     const newUser = {
       email: registerForm.value.email,
       password: registerForm.value.password,
@@ -126,8 +129,35 @@ export const useRegisterStore = defineStore('register', () => {
       joinedAt: today,
       currentChallengeId: null,
     }
-    const response = await apiClient.post('/users', newUser)
-    return response.data
+    const userRes = await apiClient.post('/users', newUser)
+    const newUserId = userRes.data.id
+
+    // 2. 이번 달 월별 챌린지 조회
+    const mcRes = await apiClient.get(`/monthlyChallenge?month=${currentMonth}`)
+    const monthlyChallenge = mcRes.data[0]
+    if (!monthlyChallenge) return userRes.data
+
+    // 3. 챌린지 참여 레코드 생성
+    const challengeRes = await apiClient.post('/challenges', {
+      userId: newUserId,
+      monthlyChallengeId: monthlyChallenge.id,
+      spentAmount: 0,
+      savedAmount: monthlyChallenge.targetAmount,
+      status: 'active',
+      weeks: [
+        { label: '1주', status: 'todo' },
+        { label: '2주', status: 'todo' },
+        { label: '3주', status: 'todo' },
+        { label: '4주', status: 'todo' },
+      ],
+    })
+
+    // 4. 유저의 currentChallengeId 업데이트
+    await apiClient.patch(`/users/${newUserId}`, {
+      currentChallengeId: challengeRes.data.id,
+    })
+
+    return { ...userRes.data, currentChallengeId: challengeRes.data.id }
   }
 
   // 회원가입 상태 전체 초기화 (가입 완료 후 또는 앱 초기화 시 호출)

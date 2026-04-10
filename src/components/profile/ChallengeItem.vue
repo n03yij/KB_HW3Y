@@ -49,6 +49,11 @@ const statusStyle = {
     bar: 'bg-kb-expense',
     text: '실패',
   },
+  active: {
+    badge: 'bg-kb-icon-yellow text-kb-dark-gray',
+    bar: 'bg-kb-yellow',
+    text: '진행중',
+  },
 }
 </script>
 

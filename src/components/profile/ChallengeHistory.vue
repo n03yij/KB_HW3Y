@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import ChallengeItem from './ChallengeItem.vue'
 import { useAuthStore } from '@/stores/user'
 import { getChallengeHistory } from '@/api/challenge'
+import apiClient from '@/api/axios'
 
 const authStore = useAuthStore()
 const challenges = ref([])
@@ -27,12 +28,43 @@ onMounted(async () => {
   }
 
   isLoading.value = true
-  let history
   try {
-    history = await getChallengeHistory(userId)
+    // 과거 히스토리 + 현재 진행 중인 챌린지 병렬 조회
+    const currentChallengeId = authStore.currentUser?.currentChallengeId
+    const [history, currentChallenge] = await Promise.all([
+      getChallengeHistory(userId),
+      currentChallengeId ? apiClient.get(`/challenges/${currentChallengeId}`).then(r => r.data) : null,
+    ])
+
+    // 현재 진행 중인 챌린지 → monthlyChallenge에서 제목/월 가져오기
+    let currentItem = null
+    if (currentChallenge) {
+      const mc = await apiClient.get(`/monthlyChallenge/${currentChallenge.monthlyChallengeId}`).then(r => r.data)
+      currentItem = {
+        id: `current-${currentChallenge.id}`,
+        title: mc.title,
+        date: formatMonth(mc.month),
+        status: 'active',
+        used: currentChallenge.spentAmount,
+        saved: Math.max(mc.targetAmount - currentChallenge.spentAmount, 0),
+        percent: calcPercent(currentChallenge.spentAmount, Math.max(mc.targetAmount - currentChallenge.spentAmount, 0)),
+      }
+    }
+
+    const historyItems = history.map((item) => ({
+      id: item.id,
+      title: item.title,
+      date: formatMonth(item.month),
+      status: item.status,
+      used: item.spentAmount,
+      saved: Math.abs(item.savedAmount),
+      percent: calcPercent(item.spentAmount, item.savedAmount),
+    }))
+
+    // 현재 챌린지를 맨 위에 표시
+    challenges.value = currentItem ? [currentItem, ...historyItems] : historyItems
   } catch (err) {
     console.error('[ChallengeHistory] API error:', err)
-    return
   } finally {
     isLoading.value = false
   }

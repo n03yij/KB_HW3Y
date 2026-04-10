@@ -12,23 +12,61 @@ onMounted(async () => {
   const challengeId = authStore.currentUser?.currentChallengeId
   if (!challengeId) return
 
-  const fetch = async () => {
-    const res = await apiClient.get(`/challengeLeaderboard?challengeId=${challengeId}&_limit=100`)
-    rankings.value = res.data.sort((a, b) => a.rank - b.rank)
+  const challengeRes = await apiClient.get(`/challenges/${challengeId}`)
+  const monthlyChallengeId = challengeRes.data?.monthlyChallengeId
+  if (!monthlyChallengeId) return
+
+  const buildRankings = async () => {
+    const [challengesRes, usersRes, mcRes, dummyRes] = await Promise.all([
+      apiClient.get(`/challenges?monthlyChallengeId=${monthlyChallengeId}`),
+      apiClient.get('/users'),
+      apiClient.get(`/monthlyChallenge/${monthlyChallengeId}`),
+      apiClient.get(`/challengeLeaderboard?monthlyChallengeId=${monthlyChallengeId}&_limit=100`),
+    ])
+
+    const targetAmount = mcRes.data.targetAmount
+    const userMap = Object.fromEntries(usersRes.data.map((u) => [String(u.id), u.nickname]))
+
+    // 실제 유저 랭킹 (challenges 테이블 기반, 지출 1건 이상인 유저만)
+    const realEntries = challengesRes.data
+      .filter((c) => c.spentAmount > 0)
+      .map((c) => ({
+        userId: String(c.userId),
+        name: userMap[String(c.userId)] ?? '알 수 없음',
+        spentAmount: c.spentAmount,
+        savedAmount: Math.max(targetAmount - c.spentAmount, 0),
+      }))
+
+    // 더미 유저 (challengeLeaderboard에서 fake- 유저만)
+    const dummyEntries = dummyRes.data
+      .filter((r) => String(r.userId).startsWith('fake-'))
+      .map((r) => ({
+        userId: r.userId,
+        name: r.name,
+        spentAmount: r.spentAmount,
+        savedAmount: r.savedAmount,
+      }))
+
+    // 합치고 savedAmount 내림차순 정렬 후 rank 부여
+    const merged = [...realEntries, ...dummyEntries]
+      .sort((a, b) => b.savedAmount - a.savedAmount)
+      .map((entry, i) => ({ ...entry, rank: i + 1 }))
+
+    rankings.value = merged
   }
 
-  await fetch()
-
-  pollingTimer = setInterval(fetch, 3000)
+  await buildRankings()
+  pollingTimer = setInterval(buildRankings, 3000)
 })
 
 onUnmounted(() => {
   if (pollingTimer) clearInterval(pollingTimer)
 })
 
-const myRanking = computed(() => rankings.value.find((r) => r.isMe))
+const currentUserId = authStore.currentUser?.id
+const myRanking = computed(() => rankings.value.find((r) => String(r.userId) === String(currentUserId)))
 const myRank = computed(() => myRanking.value?.rank ?? 999)
-const topTen = computed(() => rankings.value.filter((r) => !r.isMe).slice(0, 10))
+const topTen = computed(() => rankings.value.filter((r) => String(r.userId) !== String(currentUserId)).slice(0, 10))
 const listItems = computed(() =>
   rankings.value
     .slice()
