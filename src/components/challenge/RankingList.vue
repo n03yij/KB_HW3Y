@@ -26,6 +26,7 @@ onMounted(async () => {
     const userMap = Object.fromEntries(usersRes.data.map((u) => [String(u.id), u.nickname]))
 
     const merged = challengesRes.data
+      .filter((c) => c.spentAmount > 0)
       .map((c) => ({
         userId: String(c.userId),
         name: userMap[String(c.userId)] ?? '알 수 없음',
