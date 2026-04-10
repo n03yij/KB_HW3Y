@@ -5,7 +5,13 @@
       <NavBar v-if="showNav" />
       <!-- 하단바/네비바가 없을 때 Splash가 꽉 차도록 flex-1 확인 -->
       <main class="flex-1 overflow-y-auto scrollbar-hide">
-        <RouterView />
+        <RouterView v-slot="{ Component, route }">
+          <Transition name="fade" mode="out-in">
+            <KeepAlive :max="4">
+              <component :is="Component" :key="route.name" />
+            </KeepAlive>
+          </Transition>
+        </RouterView>
       </main>
       <BottomBar v-if="showBottomBar" />
     </div>
