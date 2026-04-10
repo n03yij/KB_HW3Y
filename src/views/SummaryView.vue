@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onActivated } from 'vue'
 import { getTransactions } from '@/api/transaction'
 import { iconMap } from '@/utils/icons'
 import { useAuthStore } from '@/stores/user'
@@ -22,7 +22,7 @@ const authStore = useAuthStore()
 const monthlyData = ref([])
 const categoryData = ref([])
 
-onMounted(async () => {
+async function fetchData() {
   const transactions = await getTransactions({ userId: authStore.currentUser?.id })
 
   // 월별 데이터 가공
@@ -53,7 +53,10 @@ onMounted(async () => {
     amount,
     max: maxAmount,
   }))
-})
+}
+
+onMounted(fetchData)
+onActivated(fetchData)
 
 const profitData = computed(() =>
   monthlyData.value

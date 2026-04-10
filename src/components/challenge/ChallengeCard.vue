@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onActivated, nextTick } from 'vue'
 import ramuPushImg from '@/assets/ramu_push.png'
 import ramuEndImg from '@/assets/ramu_end.png'
 import apiClient from '@/api/axios'
@@ -12,8 +12,7 @@ const progressBarWidth = ref(0)
 const progressBarRef = ref(null)
 const mounted = ref(false)
 
-onMounted(async () => {
-  // 데이터 fetch
+async function fetchChallenge() {
   const challengeId = authStore.currentUser?.currentChallengeId
   if (challengeId) {
     const res = await apiClient.get(`/challenges/${challengeId}`)
@@ -22,6 +21,10 @@ onMounted(async () => {
     const mcRes = await apiClient.get(`/monthlyChallenge/${res.data.monthlyChallengeId}`)
     monthlyChallenge.value = mcRes.data
   }
+}
+
+onMounted(async () => {
+  await fetchChallenge()
 
   // fetch 후 DOM 업데이트 기다렸다가 진행바 측정
   await nextTick()
@@ -34,6 +37,8 @@ onMounted(async () => {
   })
   ro.observe(el)
 })
+
+onActivated(fetchChallenge)
 
 const currentMonth = new Date().getMonth() + 1
 const currentYear = new Date().getFullYear()

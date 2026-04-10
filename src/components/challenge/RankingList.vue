@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, onActivated, onDeactivated } from 'vue'
 import { iconMap } from '@/utils/icons'
 import apiClient from '@/api/axios'
 import { useAuthStore } from '@/stores/user'
@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/user'
 const authStore = useAuthStore()
 const rankings = ref([])
 let pollingTimer = null
+let buildRankings = null
 
 onMounted(async () => {
   const challengeId = authStore.currentUser?.currentChallengeId
@@ -16,7 +17,7 @@ onMounted(async () => {
   const monthlyChallengeId = myChallenge.data?.monthlyChallengeId
   if (!monthlyChallengeId) return
 
-  const buildRankings = async () => {
+  buildRankings = async () => {
     const [challengesRes, usersRes] = await Promise.all([
       apiClient.get(`/challenges?monthlyChallengeId=${monthlyChallengeId}`),
       apiClient.get('/users'),
@@ -48,6 +49,17 @@ onMounted(async () => {
 
 onUnmounted(() => {
   if (pollingTimer) clearInterval(pollingTimer)
+})
+
+onDeactivated(() => {
+  if (pollingTimer) clearInterval(pollingTimer)
+})
+
+onActivated(async () => {
+  if (!buildRankings) return
+  if (pollingTimer) clearInterval(pollingTimer)
+  await buildRankings()
+  pollingTimer = setInterval(buildRankings, 3000)
 })
 
 const myRanking = computed(() =>

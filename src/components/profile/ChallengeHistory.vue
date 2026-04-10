@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { ref, onMounted, onActivated } from 'vue'
 import ChallengeItem from './ChallengeItem.vue'
 import { useAuthStore } from '@/stores/user'
 import { getChallengeHistory } from '@/api/challenge'
@@ -8,6 +8,7 @@ import apiClient from '@/api/axios'
 const authStore = useAuthStore()
 const challenges = ref([])
 const isLoading = ref(false)
+const isFirstLoad = ref(true)
 
 function formatMonth(month) {
   const [year, m] = month.split('-')
@@ -20,15 +21,14 @@ function calcPercent(spentAmount, savedAmount) {
   return Math.min(100, Math.round((spentAmount / target) * 100))
 }
 
-onMounted(async () => {
+async function fetchHistory(showSpinner = true) {
   const userId = authStore.currentUser?.id
   if (!userId) {
     console.warn('[ChallengeHistory] currentUser is null — skipping fetch')
     return
   }
 
-  isLoading.value = true
-
+  if (showSpinner) isLoading.value = true
   try {
     const currentChallengeId = authStore.currentUser?.currentChallengeId
     const [history, currentChallenge] = await Promise.all([
@@ -80,7 +80,13 @@ onMounted(async () => {
   } finally {
     isLoading.value = false
   }
+}
+
+onMounted(() => {
+  fetchHistory(true)
+  isFirstLoad.value = false
 })
+onActivated(() => fetchHistory(false))
 </script>
 
 <template>
