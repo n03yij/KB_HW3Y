@@ -6,6 +6,7 @@ import { getChallengeHistory } from '@/api/challenge'
 
 const authStore = useAuthStore()
 const challenges = ref([])
+const isLoading = ref(false)
 
 function formatMonth(month) {
   const [year, m] = month.split('-')
@@ -25,14 +26,15 @@ onMounted(async () => {
     return
   }
 
-  console.log('[ChallengeHistory] fetching for userId:', userId)
+  isLoading.value = true
   let history
   try {
     history = await getChallengeHistory(userId)
-    console.log('[ChallengeHistory] received:', history)
   } catch (err) {
     console.error('[ChallengeHistory] API error:', err)
     return
+  } finally {
+    isLoading.value = false
   }
 
   challenges.value = history.map((item) => ({
@@ -51,7 +53,11 @@ onMounted(async () => {
   <div class="mt-6">
     <h3 class="mb-2 text-lg font-bold text-kb-profit">챌린지 히스토리</h3>
 
-    <div v-if="challenges.length === 0" class="text-sm text-kb-muted text-center py-6">
+    <div v-if="isLoading" class="flex justify-center py-6">
+      <div class="w-6 h-6 border-2 border-kb-profit border-t-transparent rounded-full animate-spin" />
+    </div>
+
+    <div v-else-if="challenges.length === 0" class="text-sm text-kb-muted text-center py-6">
       챌린지 히스토리가 없습니다.
     </div>
 
