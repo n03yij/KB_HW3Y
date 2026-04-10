@@ -52,14 +52,14 @@ const onPointerUp = () => {
 import busIcon from '@/assets/bus.svg'
 import coffeeIcon from '@/assets/coffee.svg'
 import cutleryIcon from '@/assets/cutlery.svg'
-import etcIcon from '@/assets/Etc.svg'
+import etcIcon from '@/assets/etc.svg'
 import homeIcon from '@/assets/home.svg'
-import investIcon from '@/assets/Invest.svg'
+import investIcon from '@/assets/invest.svg'
 import leisureIcon from '@/assets/leisure.svg'
-import medicalIcon from '@/assets/Medical.svg'
-import salaryIcon from '@/assets/Salary.svg'
+import medicalIcon from '@/assets/medical.svg'
+import salaryIcon from '@/assets/salary.svg'
 import shoppingBagIcon from '@/assets/shoppingBag.svg'
-import sideJobIcon from '@/assets/SideJob.svg'
+import sideJobIcon from '@/assets/sideJob.svg'
 
 const props = defineProps({
   defaultDate: {
