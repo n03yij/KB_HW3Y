@@ -1,11 +1,12 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import RegisterButton from '../components/Register/RegisterButton.vue'
 import { useRegisterStore } from '../stores/useRegisterStore'
 import { useRouter } from 'vue-router'
 
 const registerStore = useRegisterStore()
 const router = useRouter()
+const isSubmitting = ref(false)
 
 // 단계별 라우트 매핑 (1단계: agreement, 2단계: account, 3단계: profile)
 const stepRoutes = ['/register/agreement', '/register/account', '/register/profile']
@@ -27,6 +28,8 @@ function handlePrev() {
 async function handleNext() {
   // 마지막 단계(3단계)일 때: 회원가입 API 호출
   if (isLastStep.value) {
+    if (isSubmitting.value) return
+    isSubmitting.value = true
     try {
       await registerStore.register()
       // 네비게이션 완료 후 상태 초기화 (순서 중요: push 먼저 await)
@@ -35,6 +38,8 @@ async function handleNext() {
     } catch (error) {
       console.error('회원가입 실패:', error)
       alert('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.')
+    } finally {
+      isSubmitting.value = false
     }
     return
   }
@@ -83,7 +88,7 @@ async function handleNext() {
     <RegisterButton
       class="bottom-0"
       :label="isLastStep ? '가입 완료' : '다음'"
-      :disabled="!registerStore.isCurrentStepValid"
+      :disabled="!registerStore.isCurrentStepValid || isSubmitting"
       @click="handleNext"
     />
   </div>
